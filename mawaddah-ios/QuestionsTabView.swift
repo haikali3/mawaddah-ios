@@ -38,7 +38,7 @@ struct QuestionPickerButton: View {
                 .cornerRadius(15)
         }
         .sheet(isPresented: $showQuestionPicker) {
-            NavigationView {
+            NavigationStack {
                 List {
                     ForEach(0..<questions.count, id: \.self) { index in
                         Button(action: {
