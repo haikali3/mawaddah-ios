@@ -12,7 +12,7 @@ struct QuestionsTabView: View {
                 showQuestionPicker: $showQuestionPicker,
                 questions: questions
             )
-            FlashCardView(question: questions[selectedQuestion])
+            SwipableFlashCardView(currentIndex: $selectedQuestion, questions: questions)
         }
         .background(Color.purple.opacity(0.3).ignoresSafeArea())
     }
@@ -51,18 +51,56 @@ struct QuestionPickerButton: View {
     }
 }
 
-struct FlashCardView: View {
-    let question: String
+struct SwipableFlashCardView: View {
+    @Binding var currentIndex: Int
+    let questions: [String]
+    @State private var offset = CGSize.zero
+    @State private var isSwiped = false
 
     var body: some View {
-        RoundedRectangle(cornerRadius: 25)
-            .fill(Color.white.opacity(0.3))
-            .overlay(
-                Text("Flash Card\n\(question)")
-                    .font(.title)
-                    .foregroundColor(.black)
-                    .multilineTextAlignment(.center)
-            )
-            .padding(30)
+        if currentIndex < questions.count {
+            RoundedRectangle(cornerRadius: 25)
+                .fill(Color.white.opacity(0.3))
+                .overlay(
+                    Text(questions[currentIndex])
+                        .font(.title)
+                        .foregroundColor(.black)
+                        .multilineTextAlignment(.center)
+                        .padding()
+                )
+                .padding(30)
+                .offset(x: offset.width, y: 0)
+                .rotationEffect(.degrees(Double(offset.width / 20)))
+                .gesture(
+                    DragGesture()
+                        .onChanged { gesture in
+                            offset = gesture.translation
+                        }
+                        .onEnded { _ in
+                            if abs(offset.width) > 100 {
+                                withAnimation {
+                                    isSwiped = true
+                                    offset = CGSize(width: offset.width > 0 ? 1000 : -1000, height: 0)
+                                }
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                                    offset = .zero
+                                    isSwiped = false
+                                    if currentIndex < questions.count - 1 {
+                                        currentIndex += 1
+                                    }
+                                }
+                            } else {
+                                withAnimation {
+                                    offset = .zero
+                                }
+                            }
+                        }
+                )
+                .animation(.spring(), value: offset)
+        } else {
+            Text("No more questions!")
+                .font(.title)
+                .foregroundColor(.black)
+        }
     }
 } 
