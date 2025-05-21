@@ -33,9 +33,11 @@ struct QuestionPickerButton: View {
             showQuestionPicker = true
         }) {
             Text("Question \(selectedQuestion + 1) of \(questions.count)")
-                .frame(width: 300, height: 60)
+                .frame(width: 350, height: 50)
+                // .frame(maxWidth: .infinity)
+                // .frame(height: 60)
                 .background(Color.white.opacity(0.7))
-                .cornerRadius(10)
+                .cornerRadius(15)
         }
         .sheet(isPresented: $showQuestionPicker) {
             VStack {
