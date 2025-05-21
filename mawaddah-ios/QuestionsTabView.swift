@@ -72,58 +72,79 @@ struct SwipableFlashCardView: View {
     @Binding var currentIndex: Int
     let questions: [String]
     @State private var offset = CGSize.zero
-    @State private var isSwiped = false
 
     var body: some View {
-        if currentIndex < questions.count {
-            RoundedRectangle(cornerRadius: 25)
-                .fill(Color.white.opacity(0.3))
-                .overlay(
-                    VStack {
-                        Text("Question \(currentIndex + 1)")
-                            .font(.headline)
-                            .foregroundColor(.black)
-                            .padding(.bottom, 10)
-                        Text(questions[currentIndex])
-                            .font(.title3)
-                            .foregroundColor(.black)
-                            .multilineTextAlignment(.center)
-                            .padding()
-                    }
-                )
-                .padding(30)
-                .offset(x: offset.width, y: 0)
-                .rotationEffect(.degrees(Double(offset.width / 20)))
-                .gesture(
-                    DragGesture()
-                        .onChanged { gesture in
-                            offset = gesture.translation
+        ZStack {
+            // Next card (if available)
+            if currentIndex + 1 < questions.count {
+                RoundedRectangle(cornerRadius: 25)
+                    .fill(Color.white.opacity(0.2))
+                    .overlay(
+                        VStack {
+                            Text("Question \(currentIndex + 2)")
+                                .font(.headline)
+                                .foregroundColor(.black)
+                                .padding(.bottom, 10)
+                            Text(questions[currentIndex + 1])
+                                .font(.title3)
+                                .foregroundColor(.black)
+                                .multilineTextAlignment(.center)
+                                .padding()
                         }
-                        .onEnded { _ in
-                            if abs(offset.width) > 100 {
-                                withAnimation {
-                                    isSwiped = true
-                                    offset = CGSize(width: offset.width > 0 ? 1000 : -1000, height: 0)
-                                }
-                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-                                    offset = .zero
-                                    isSwiped = false
-                                    if currentIndex < questions.count - 1 {
-                                        currentIndex += 1
+                    )
+                    .padding(30)
+                    .scaleEffect()
+                    .offset()
+                    .zIndex(0)
+            }
+
+            // Current card
+            if currentIndex < questions.count {
+                RoundedRectangle(cornerRadius: 25)
+                    .fill(Color.white.opacity(0.3))
+                    .overlay(
+                        VStack {
+                            Text("Question \(currentIndex + 1)")
+                                .font(.headline)
+                                .foregroundColor(.black)
+                                .padding(.bottom, 10)
+                            Text(questions[currentIndex])
+                                .font(.title3)
+                                .foregroundColor(.black)
+                                .multilineTextAlignment(.center)
+                                .padding()
+                        }
+                    )
+                    .padding(30)
+                    .offset(x: offset.width, y: 0)
+                    .rotationEffect(.degrees(Double(offset.width / 20)))
+                    .gesture(
+                        DragGesture()
+                            .onChanged { gesture in
+                                offset = gesture.translation
+                            }
+                            .onEnded { _ in
+                                if abs(offset.width) > 100 {
+                                    withAnimation {
+                                        offset = CGSize(width: offset.width > 0 ? 1000 : -1000, height: 0)
+                                    }
+                                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                                        offset = .zero
+                                        if currentIndex < questions.count - 1 {
+                                            currentIndex += 1
+                                        }
+                                    }
+                                } else {
+                                    withAnimation {
+                                        offset = .zero
                                     }
                                 }
-                            } else {
-                                withAnimation {
-                                    offset = .zero
-                                }
                             }
-                        }
-                )
-                .animation(.spring(), value: offset)
-        } else {
-            Text("No more questions!")
-                .font(.title)
-                .foregroundColor(.black)
+                    )
+                    .animation(.spring(), value: offset)
+                    .zIndex(1)
+            }
         }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 } 
