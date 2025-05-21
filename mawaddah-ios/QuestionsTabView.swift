@@ -6,13 +6,18 @@ struct QuestionsTabView: View {
     let questions: [String]
     
     var body: some View {
-        VStack(spacing: 20) {
+        VStack {
+            // Spacer()
+            SwipableFlashCardView(currentIndex: $selectedQuestion, questions: questions)
+            // Spacer()
             QuestionPickerButton(
                 selectedQuestion: $selectedQuestion,
                 showQuestionPicker: $showQuestionPicker,
                 questions: questions
             )
-            SwipableFlashCardView(currentIndex: $selectedQuestion, questions: questions)
+            .frame(maxWidth: .infinity) // Make button span full width
+            // .padding(.horizontal) // Add some padding on sides
+            .padding(.bottom, 30)
         }
         .background(Color.purple.opacity(0.3).ignoresSafeArea())
     }
