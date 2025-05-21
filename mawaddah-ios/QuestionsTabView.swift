@@ -73,10 +73,14 @@ struct SwipableFlashCardView: View {
     let questions: [String]
     @State private var offset = CGSize.zero
 
+    var isDragging: Bool {
+        offset.width != 0
+    }
+
     var body: some View {
         ZStack {
-            // Next card (if available)
-            if currentIndex + 1 < questions.count {
+            // Show next card only when dragging
+            if isDragging, currentIndex + 1 < questions.count {
                 RoundedRectangle(cornerRadius: 25)
                     .fill(Color.white.opacity(0.2))
                     .overlay(
@@ -98,10 +102,10 @@ struct SwipableFlashCardView: View {
                     .zIndex(0)
             }
 
-            // Current card
+            // Current card (always visible)
             if currentIndex < questions.count {
                 RoundedRectangle(cornerRadius: 25)
-                    .fill(Color.white.opacity(0.3))
+                    .fill(Color.white.opacity(0.3)) // Make current card fully opaque
                     .overlay(
                         VStack {
                             Text("Question \(currentIndex + 1)")
@@ -141,7 +145,6 @@ struct SwipableFlashCardView: View {
                                 }
                             }
                     )
-                    .animation(.spring(), value: offset)
                     .zIndex(1)
             }
         }
