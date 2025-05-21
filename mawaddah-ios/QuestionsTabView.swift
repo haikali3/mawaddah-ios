@@ -34,25 +34,35 @@ struct QuestionPickerButton: View {
         }) {
             Text("Question \(selectedQuestion + 1) of \(questions.count)")
                 .frame(width: 350, height: 50)
-                // .frame(maxWidth: .infinity)
-                // .frame(height: 60)
                 .background(Color.white.opacity(0.7))
                 .cornerRadius(15)
         }
         .sheet(isPresented: $showQuestionPicker) {
-            VStack {
-                Picker("Select Question", selection: $selectedQuestion) {
+            NavigationView {
+                List {
                     ForEach(0..<questions.count, id: \.self) { index in
-                        Text("Question \(index + 1)").tag(index)
+                        Button(action: {
+                            selectedQuestion = index
+                            showQuestionPicker = false
+                        }) {
+                            HStack {
+                                Text("\(index + 1).")
+                                    .foregroundColor(.gray)
+                                Text(questions[index])
+                                    .foregroundColor(.primary)
+                                Spacer()
+                                if index == selectedQuestion {
+                                    Image(systemName: "checkmark")
+                                        .foregroundColor(.blue)
+                                }
+                            }
+                        }
                     }
                 }
-                .pickerStyle(WheelPickerStyle())
-                .labelsHidden()
-                .frame(height: 200)
-                Button("Done") {
+                .navigationTitle("Select Question")
+                .navigationBarItems(trailing: Button("Done") {
                     showQuestionPicker = false
-                }
-                .padding()
+                })
             }
         }
     }
