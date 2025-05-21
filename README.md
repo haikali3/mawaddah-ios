@@ -10,8 +10,9 @@ Mawaddah is an iOS app designed to help users evaluate their potential relations
 
 ## App Preview
 
-<!-- Place your screenshot in the `assets` folder and update the path below -->
-![App Screenshot](assets/screenshot.png)
+<!-- Paste image on github readme markdown -->
+![mawaddah](https://github.com/user-attachments/assets/918c89f3-8a81-482c-80cc-b3c83cb765d4)
+
 
 ## Requirements
 - macOS with Xcode 14 or later
