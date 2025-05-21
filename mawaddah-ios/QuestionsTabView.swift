@@ -4,7 +4,7 @@ struct QuestionsTabView: View {
     @Binding var selectedQuestion: Int
     @Binding var showQuestionPicker: Bool
     let questions: [String]
-
+    
     var body: some View {
         VStack(spacing: 20) {
             QuestionPickerButton(
@@ -27,8 +27,8 @@ struct QuestionPickerButton: View {
         Button(action: {
             showQuestionPicker = true
         }) {
-            Text(questions[selectedQuestion])
-                .frame(width: 100, height: 60)
+            Text("Question \(selectedQuestion + 1) of \(questions.count)")
+                .frame(width: 300, height: 60)
                 .background(Color.white.opacity(0.7))
                 .cornerRadius(10)
         }
@@ -36,7 +36,7 @@ struct QuestionPickerButton: View {
             VStack {
                 Picker("Select Question", selection: $selectedQuestion) {
                     ForEach(0..<questions.count, id: \.self) { index in
-                        Text(questions[index]).tag(index)
+                        Text("Question \(index + 1)").tag(index)
                     }
                 }
                 .pickerStyle(WheelPickerStyle())
@@ -62,11 +62,17 @@ struct SwipableFlashCardView: View {
             RoundedRectangle(cornerRadius: 25)
                 .fill(Color.white.opacity(0.3))
                 .overlay(
-                    Text(questions[currentIndex])
-                        .font(.title)
-                        .foregroundColor(.black)
-                        .multilineTextAlignment(.center)
-                        .padding()
+                    VStack {
+                        Text("Question \(currentIndex + 1)")
+                            .font(.headline)
+                            .foregroundColor(.black)
+                            .padding(.bottom, 10)
+                        Text(questions[currentIndex])
+                            .font(.title3)
+                            .foregroundColor(.black)
+                            .multilineTextAlignment(.center)
+                            .padding()
+                    }
                 )
                 .padding(30)
                 .offset(x: offset.width, y: 0)
