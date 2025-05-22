@@ -6,6 +6,10 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		D87BD7B038949C3F17D2F3DE /* Pods_mawaddah_ios.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 56D14BA95406C872FC575426 /* Pods_mawaddah_ios.framework */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		B368933C2DDD888E00591FFB /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -24,24 +28,33 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		228100C9ABAB6DEB798C9C13 /* Pods-mawaddah-ios.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-mawaddah-ios.release.xcconfig"; path = "Target Support Files/Pods-mawaddah-ios/Pods-mawaddah-ios.release.xcconfig"; sourceTree = "<group>"; };
+		56D14BA95406C872FC575426 /* Pods_mawaddah_ios.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_mawaddah_ios.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B368932E2DDD888D00591FFB /* mawaddah-ios.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "mawaddah-ios.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B368933B2DDD888E00591FFB /* mawaddah-iosTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "mawaddah-iosTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B36893452DDD888E00591FFB /* mawaddah-iosUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "mawaddah-iosUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		CB5CC8994A7EA7BB1B6C99B0 /* Pods-mawaddah-ios.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-mawaddah-ios.debug.xcconfig"; path = "Target Support Files/Pods-mawaddah-ios/Pods-mawaddah-ios.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		B36893302DDD888D00591FFB /* mawaddah-ios */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+			);
 			path = "mawaddah-ios";
 			sourceTree = "<group>";
 		};
 		B368933E2DDD888E00591FFB /* mawaddah-iosTests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+			);
 			path = "mawaddah-iosTests";
 			sourceTree = "<group>";
 		};
 		B36893482DDD888E00591FFB /* mawaddah-iosUITests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+			);
 			path = "mawaddah-iosUITests";
 			sourceTree = "<group>";
 		};
@@ -52,6 +65,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D87BD7B038949C3F17D2F3DE /* Pods_mawaddah_ios.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -72,6 +86,24 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		5BB69245105DEF0F7FC03618 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				56D14BA95406C872FC575426 /* Pods_mawaddah_ios.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		843740BCE49ADC92894028FC /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				CB5CC8994A7EA7BB1B6C99B0 /* Pods-mawaddah-ios.debug.xcconfig */,
+				228100C9ABAB6DEB798C9C13 /* Pods-mawaddah-ios.release.xcconfig */,
+			);
+			name = Pods;
+			path = Pods;
+			sourceTree = "<group>";
+		};
 		B36893252DDD888D00591FFB = {
 			isa = PBXGroup;
 			children = (
@@ -79,6 +111,8 @@
 				B368933E2DDD888E00591FFB /* mawaddah-iosTests */,
 				B36893482DDD888E00591FFB /* mawaddah-iosUITests */,
 				B368932F2DDD888D00591FFB /* Products */,
+				843740BCE49ADC92894028FC /* Pods */,
+				5BB69245105DEF0F7FC03618 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -99,9 +133,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = B368934F2DDD888E00591FFB /* Build configuration list for PBXNativeTarget "mawaddah-ios" */;
 			buildPhases = (
+				48AAAACBDB9A09C77D2D723D /* [CP] Check Pods Manifest.lock */,
 				B368932A2DDD888D00591FFB /* Sources */,
 				B368932B2DDD888D00591FFB /* Frameworks */,
 				B368932C2DDD888D00591FFB /* Resources */,
+				1FEC5E52D315B48914AD47C2 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -111,8 +147,6 @@
 				B36893302DDD888D00591FFB /* mawaddah-ios */,
 			);
 			name = "mawaddah-ios";
-			packageProductDependencies = (
-			);
 			productName = "mawaddah-ios";
 			productReference = B368932E2DDD888D00591FFB /* mawaddah-ios.app */;
 			productType = "com.apple.product-type.application";
@@ -134,8 +168,6 @@
 				B368933E2DDD888E00591FFB /* mawaddah-iosTests */,
 			);
 			name = "mawaddah-iosTests";
-			packageProductDependencies = (
-			);
 			productName = "mawaddah-iosTests";
 			productReference = B368933B2DDD888E00591FFB /* mawaddah-iosTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
@@ -157,8 +189,6 @@
 				B36893482DDD888E00591FFB /* mawaddah-iosUITests */,
 			);
 			name = "mawaddah-iosUITests";
-			packageProductDependencies = (
-			);
 			productName = "mawaddah-iosUITests";
 			productReference = B36893452DDD888E00591FFB /* mawaddah-iosUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
@@ -195,6 +225,9 @@
 			);
 			mainGroup = B36893252DDD888D00591FFB;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				B368937C2DDEF01500591FFB /* XCRemoteSwiftPackageReference "DDSpiderChart" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = B368932F2DDD888D00591FFB /* Products */;
 			projectDirPath = "";
@@ -230,6 +263,48 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		1FEC5E52D315B48914AD47C2 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-mawaddah-ios/Pods-mawaddah-ios-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-mawaddah-ios/Pods-mawaddah-ios-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-mawaddah-ios/Pods-mawaddah-ios-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		48AAAACBDB9A09C77D2D723D /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-mawaddah-ios-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		B368932A2DDD888D00591FFB /* Sources */ = {
@@ -390,6 +465,7 @@
 		};
 		B36893502DDD888E00591FFB /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = CB5CC8994A7EA7BB1B6C99B0 /* Pods-mawaddah-ios.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -417,6 +493,7 @@
 		};
 		B36893512DDD888E00591FFB /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 228100C9ABAB6DEB798C9C13 /* Pods-mawaddah-ios.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -550,6 +627,17 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		B368937C2DDEF01500591FFB /* XCRemoteSwiftPackageReference "DDSpiderChart" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/dadalar/DDSpiderChart";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.6.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
 	};
 	rootObject = B36893262DDD888D00591FFB /* Project object */;
 }

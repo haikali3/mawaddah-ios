@@ -26,11 +26,19 @@ Mawaddah is an iOS app designed to help users evaluate their potential relations
    cd mawaddah-ios
    ```
 
-2. **Open the project in Xcode:**
-   - Double-click `mawaddah-ios.xcodeproj` or open it via Xcode (`File > Open`).
+2. Install dependencies with CocoaPods (only if you add any pods in the future):
+
+   ```bash
+   pod install
+   ```
 
 3. **Install dependencies (if any):**
    - This project currently does not use CocoaPods, Carthage, or Swift Package Manager dependencies. If you add any, follow their respective installation steps.
+   - open mawaddah-ios.xcworkspace
+   ```bash
+   pod install   # or carthage bootstrap, swift package resolve
+   open mawaddah-ios.xcworkspace
+   ```
 
 4. **Build and run the app:**
    - Select a simulator (e.g., iPhone 15) or your physical device.
@@ -49,4 +57,6 @@ Pull requests are welcome! For major changes, please open an issue first to disc
 
 ## Related Projects
 - [mawaddah](https://github.com/ammarsaf/askp) - The original project that inspired Mawaddah
+
+
 
