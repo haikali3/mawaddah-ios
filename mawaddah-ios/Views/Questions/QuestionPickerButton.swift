@@ -36,7 +36,11 @@ struct QuestionPickerButton: View {
                     }
                 }
                 .navigationTitle("Select Question")
-                .navigationBarItems(trailing: Button("Done") { showQuestionPicker = false })
+                .toolbar {
+                    ToolbarItem(placement: .navigationBarTrailing) {
+                        Button("Done") { showQuestionPicker = false }
+                    }
+                }
             }
         }
     }
