@@ -102,7 +102,7 @@ struct SwipableFlashCardView: View {
                                 .foregroundColor(.black)
                                 .multilineTextAlignment(.center)
                                 .padding()
-                            StarRatingView(rating: .constant(ratings[currentIndex + 1] ?? 3), isInteractive: false)
+                            HeartRatingView(rating: .constant(ratings[currentIndex + 1] ?? 3), isInteractive: false)
                         }
                     )
                     .padding(30)
@@ -129,7 +129,7 @@ struct SwipableFlashCardView: View {
                                 .multilineTextAlignment(.center)
                                 .padding()
                             VStack(spacing: 4) {
-                                StarRatingView(
+                                HeartRatingView(
                                     rating: Binding(
                                         get: { ratings[currentIndex] ?? 3 },
                                         set: { ratings[currentIndex] = $0 }
@@ -179,7 +179,7 @@ struct SwipableFlashCardView: View {
 }
 
 // Star rating view
-struct StarRatingView: View {
+struct HeartRatingView: View {
     @Binding var rating: Int
     var isInteractive: Bool = true
 
