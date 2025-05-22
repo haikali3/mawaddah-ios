@@ -4,14 +4,26 @@ struct QuestionPickerButton: View {
     @ObservedObject var viewModel: QuestionDeckViewModel
     @Binding var showQuestionPicker: Bool
 
+    // Use shared colors
+    private let cardColour = QuestionColors.cardColour
+    private let borderColour = QuestionColors.borderColour
+
     var body: some View {
         Button {
             showQuestionPicker = true
         } label: {
-            Text("Question \(viewModel.index + 1) of \(viewModel.questions.count)")
-                .frame(width: 350, height: 50)
-                .background(Color.white.opacity(0.7))
-                .cornerRadius(15)
+            ZStack {
+                RoundedRectangle(cornerRadius: 30)
+                    .fill(cardColour)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 30)
+                            .stroke(borderColour, lineWidth: 2)
+                    )
+                Text("Question \(viewModel.index + 1) of \(viewModel.questions.count)")
+                    .font(.headline)
+                    .foregroundColor(.black)
+            }
+            .frame(width: 350, height: 50)
         }
         .sheet(isPresented: $showQuestionPicker) {
             NavigationStack {

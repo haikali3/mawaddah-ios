@@ -5,9 +5,9 @@ struct CardView: View {
     @Binding var rating: Int
     let isInteractive: Bool
 
-    // Centralised styling
-    private let cardColour = Color(red: 238/255, green: 219/255, blue: 248/255)
-    private let borderColour = Color(red: 80/255, green: 0/255, blue: 80/255)
+    // Use shared colors
+    private let cardColour = QuestionColors.cardColour
+    private let borderColour = QuestionColors.borderColour
 
     var body: some View {
         RoundedRectangle(cornerRadius: 30)
