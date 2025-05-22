@@ -16,7 +16,6 @@ struct QuestionsTabView: View {
                 questions: questions
             )
             .frame(maxWidth: .infinity) // Make button span full width
-            // .padding(.horizontal) // Add some padding on sides
             .padding(.bottom, 30)
         }
         .background(Color.purple.opacity(0.3).ignoresSafeArea())
@@ -38,7 +37,7 @@ struct QuestionPickerButton: View {
                 .cornerRadius(15)
         }
         .sheet(isPresented: $showQuestionPicker) {
-            NavigationView {
+            NavigationStack {
                 List {
                     ForEach(0..<questions.count, id: \.self) { index in
                         Button(action: {
@@ -72,28 +71,48 @@ struct SwipableFlashCardView: View {
     @Binding var currentIndex: Int
     let questions: [String]
     @State private var offset = CGSize.zero
-    @State private var isSwiped = false
+    @State private var ratings: [Int: Int] = [:] // questionIndex: rating
+
+    // Centralized card color
+    let cardColor = Color(red: 238/255, green: 219/255, blue: 248/255) // light purple
+    let borderColor = Color(red: 80/255, green: 0/255, blue: 80/255) // dark purple
+
+    var isDragging: Bool {
+        offset.width != 0
+    }
 
     var body: some View {
-        if currentIndex < questions.count {
-            RoundedRectangle(cornerRadius: 25)
-                .fill(Color.white.opacity(0.3))
-                .overlay(
-                    VStack {
-                        Text("Question \(currentIndex + 1)")
-                            .font(.headline)
-                            .foregroundColor(.black)
-                            .padding(.bottom, 10)
-                        Text(questions[currentIndex])
-                            .font(.title3)
-                            .foregroundColor(.black)
-                            .multilineTextAlignment(.center)
-                            .padding()
-                    }
+        ZStack {
+            // Next card (only when dragging)
+            if isDragging, currentIndex + 1 < questions.count {
+                CardView(
+                    questionNumber: currentIndex + 2,
+                    questionText: questions[currentIndex + 1],
+                    rating: .constant(ratings[currentIndex + 1] ?? 3),
+                    isInteractive: false,
+                    cardColor: cardColor,
+                    borderColor: borderColor,
+                    offset: .zero,
+                    rotation: 0
                 )
-                .padding(30)
-                .offset(x: offset.width, y: 0)
-                .rotationEffect(.degrees(Double(offset.width / 20)))
+                .zIndex(0)
+            }
+
+            // Current card (always visible)
+            if currentIndex < questions.count {
+                CardView(
+                    questionNumber: currentIndex + 1,
+                    questionText: questions[currentIndex],
+                    rating: Binding(
+                        get: { ratings[currentIndex] ?? 3 },
+                        set: { ratings[currentIndex] = $0 }
+                    ),
+                    isInteractive: true,
+                    cardColor: cardColor,
+                    borderColor: borderColor,
+                    offset: CGSize(width: offset.width, height: 0),
+                    rotation: Double(offset.width / 30)
+                )
                 .gesture(
                     DragGesture()
                         .onChanged { gesture in
@@ -102,12 +121,10 @@ struct SwipableFlashCardView: View {
                         .onEnded { _ in
                             if abs(offset.width) > 100 {
                                 withAnimation {
-                                    isSwiped = true
                                     offset = CGSize(width: offset.width > 0 ? 1000 : -1000, height: 0)
                                 }
                                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
                                     offset = .zero
-                                    isSwiped = false
                                     if currentIndex < questions.count - 1 {
                                         currentIndex += 1
                                     }
@@ -119,11 +136,73 @@ struct SwipableFlashCardView: View {
                             }
                         }
                 )
-                .animation(.spring(), value: offset)
-        } else {
-            Text("No more questions!")
-                .font(.title)
-                .foregroundColor(.black)
+                .zIndex(1)
+            }
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
+    }
+}
+
+struct CardView: View {
+    let questionNumber: Int
+    let questionText: String
+    @Binding var rating: Int
+    let isInteractive: Bool
+    let cardColor: Color
+    let borderColor: Color
+    let offset: CGSize
+    let rotation: Double
+
+    var body: some View {
+        RoundedRectangle(cornerRadius: 30)
+            .fill(cardColor)
+            .overlay(
+                RoundedRectangle(cornerRadius: 30)
+                    .stroke(borderColor, lineWidth: 2)
+            )
+            .overlay(
+                VStack {
+                    Text("Question \(questionNumber)")
+                        .font(.headline)
+                        .foregroundColor(.black)
+                        .padding(.bottom, 10)
+                    Text(questionText)
+                        .font(.title3)
+                        .foregroundColor(.black)
+                        .multilineTextAlignment(.center)
+                        .padding()
+                    VStack(spacing: 4) {
+                        HeartRatingView(rating: $rating, isInteractive: isInteractive)
+                            .padding(.bottom, 18)
+                        Text("🤍 = Negative ❤️ = Positive")
+                            .font(.caption)
+                            .foregroundColor(.gray)
+                    }
+                    .padding(.top, 8)
+                }
+            )
+            .padding(30)
+            .offset(offset)
+            .rotationEffect(.degrees(rotation))
+    }
+}
+
+// Star rating view
+struct HeartRatingView: View {
+    @Binding var rating: Int
+    var isInteractive: Bool = true
+
+    var body: some View {
+        HStack(spacing: 2) {
+            ForEach(1...5, id: \.self) { heart in
+                Text(heart <= rating ? "❤️" : "🤍")
+                    .font(.system(size: 40))
+                    .onTapGesture {
+                        if isInteractive {
+                            rating = heart
+                        }
+                    }
+            }
         }
     }
 } 
