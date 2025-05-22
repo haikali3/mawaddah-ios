@@ -16,7 +16,6 @@ struct QuestionsTabView: View {
                 questions: questions
             )
             .frame(maxWidth: .infinity) // Make button span full width
-            // .padding(.horizontal) // Add some padding on sides
             .padding(.bottom, 30)
         }
         .background(Color.purple.opacity(0.3).ignoresSafeArea())
@@ -73,6 +72,9 @@ struct SwipableFlashCardView: View {
     let questions: [String]
     @State private var offset = CGSize.zero
 
+    // Centralized card color
+    let cardColor = Color(red: 238/255, green: 219/255, blue: 248/255)
+
     var isDragging: Bool {
         offset.width != 0
     }
@@ -82,7 +84,7 @@ struct SwipableFlashCardView: View {
             // Show next card only when dragging
             if isDragging, currentIndex + 1 < questions.count {
                 RoundedRectangle(cornerRadius: 25)
-                    .fill(Color.white.opacity(0.2))
+                    .fill(cardColor)
                     .overlay(
                         VStack {
                             Text("Question \(currentIndex + 2)")
@@ -105,7 +107,7 @@ struct SwipableFlashCardView: View {
             // Current card (always visible)
             if currentIndex < questions.count {
                 RoundedRectangle(cornerRadius: 25)
-                    .fill(Color.white.opacity(0.3)) // Make current card fully opaque
+                    .fill(cardColor)
                     .overlay(
                         VStack {
                             Text("Question \(currentIndex + 1)")
