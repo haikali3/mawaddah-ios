@@ -121,7 +121,7 @@ struct SwipableFlashCardView: View {
                     )
                     .padding(30)
                     .offset(x: offset.width, y: 0)
-                    .rotationEffect(.degrees(Double(offset.width / 20)))
+                    .rotationEffect(.degrees(Double(offset.width / 30)))
                     .gesture(
                         DragGesture()
                             .onChanged { gesture in
@@ -139,6 +139,7 @@ struct SwipableFlashCardView: View {
                                         }
                                     }
                                 } else {
+                                    // Card is not swiped, reset offset
                                     withAnimation {
                                         offset = .zero
                                     }
