@@ -71,6 +71,7 @@ struct SwipableFlashCardView: View {
     @Binding var currentIndex: Int
     let questions: [String]
     @State private var offset = CGSize.zero
+    @State private var ratings: [Int: Int] = [:] // questionIndex: rating
 
     // Centralized card color
     let cardColor = Color(red: 238/255, green: 219/255, blue: 248/255)
@@ -96,6 +97,7 @@ struct SwipableFlashCardView: View {
                                 .foregroundColor(.black)
                                 .multilineTextAlignment(.center)
                                 .padding()
+                            StarRatingView(rating: .constant(ratings[currentIndex + 1] ?? 0), isInteractive: false)
                         }
                     )
                     .padding(30)
@@ -119,6 +121,20 @@ struct SwipableFlashCardView: View {
                                 .foregroundColor(.black)
                                 .multilineTextAlignment(.center)
                                 .padding()
+                            VStack(spacing: 4) {
+                                StarRatingView(
+                                    rating: Binding(
+                                        get: { ratings[currentIndex] ?? 0 },
+                                        set: { ratings[currentIndex] = $0 }
+                                    ),
+                                    isInteractive: true
+                                )
+                                .padding(.bottom, 18)
+                                Text("🤍 = Negative, ❤️ = Positive")
+                                    .font(.caption)
+                                    .foregroundColor(.gray)
+                            }
+                            .padding(.top, 8)
                         }
                     )
                     .padding(30)
@@ -152,5 +168,25 @@ struct SwipableFlashCardView: View {
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
+    }
+}
+
+// Star rating view
+struct StarRatingView: View {
+    @Binding var rating: Int
+    var isInteractive: Bool = true
+
+    var body: some View {
+        HStack(spacing: 4) {
+            ForEach(1...5, id: \.self) { heart in
+                Text(heart <= rating ? "❤️" : "🤍")
+                    .font(.title2)
+                    .onTapGesture {
+                        if isInteractive {
+                            rating = heart
+                        }
+                    }
+            }
+        }
     }
 } 
