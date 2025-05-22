@@ -7,15 +7,13 @@ struct QuestionsTabView: View {
     
     var body: some View {
         VStack {
-            // Spacer()
             SwipableFlashCardView(currentIndex: $selectedQuestion, questions: questions)
-            // Spacer()
             QuestionPickerButton(
                 selectedQuestion: $selectedQuestion,
                 showQuestionPicker: $showQuestionPicker,
                 questions: questions
             )
-            .frame(maxWidth: .infinity) // Make button span full width
+            .frame(maxWidth: .infinity)
             .padding(.bottom, 30)
         }
         .background(Color.purple.opacity(0.3).ignoresSafeArea())
