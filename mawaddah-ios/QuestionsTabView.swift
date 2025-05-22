@@ -83,98 +83,107 @@ struct SwipableFlashCardView: View {
 
     var body: some View {
         ZStack {
-            // Show next card only when dragging
+            // Next card (only when dragging)
             if isDragging, currentIndex + 1 < questions.count {
-                RoundedRectangle(cornerRadius: 30)
-                    .fill(cardColor)
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 30)
-                            .stroke(borderColor, lineWidth: 2)
-                    )
-                    .overlay(
-                        VStack {
-                            Text("Question \(currentIndex + 2)")
-                                .font(.headline)
-                                .foregroundColor(.black)
-                                .padding(.bottom, 10)
-                            Text(questions[currentIndex + 1])
-                                .font(.title3)
-                                .foregroundColor(.black)
-                                .multilineTextAlignment(.center)
-                                .padding()
-                            HeartRatingView(rating: .constant(ratings[currentIndex + 1] ?? 3), isInteractive: false)
-                        }
-                    )
-                    .padding(30)
-                    .zIndex(0)
+                CardView(
+                    questionNumber: currentIndex + 2,
+                    questionText: questions[currentIndex + 1],
+                    rating: .constant(ratings[currentIndex + 1] ?? 3),
+                    isInteractive: false,
+                    cardColor: cardColor,
+                    borderColor: borderColor,
+                    offset: .zero,
+                    rotation: 0
+                )
+                .zIndex(0)
             }
 
             // Current card (always visible)
             if currentIndex < questions.count {
-                RoundedRectangle(cornerRadius: 30)
-                    .fill(cardColor)
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 30)
-                            .stroke(borderColor, lineWidth: 2)
-                    )
-                    .overlay(
-                        VStack {
-                            Text("Question \(currentIndex + 1)")
-                                .font(.headline)
-                                .foregroundColor(.black)
-                                .padding(.bottom, 10)
-                            Text(questions[currentIndex])
-                                .font(.title3)
-                                .foregroundColor(.black)
-                                .multilineTextAlignment(.center)
-                                .padding()
-                            VStack(spacing: 4) {
-                                HeartRatingView(
-                                    rating: Binding(
-                                        get: { ratings[currentIndex] ?? 3 },
-                                        set: { ratings[currentIndex] = $0 }
-                                    ),
-                                    isInteractive: true
-                                )
-                                .padding(.bottom, 18)
-                                Text("🤍 = Negative ❤️ = Positive")
-                                    .font(.caption)
-                                    .foregroundColor(.gray)
-                            }
-                            .padding(.top, 8)
+                CardView(
+                    questionNumber: currentIndex + 1,
+                    questionText: questions[currentIndex],
+                    rating: Binding(
+                        get: { ratings[currentIndex] ?? 3 },
+                        set: { ratings[currentIndex] = $0 }
+                    ),
+                    isInteractive: true,
+                    cardColor: cardColor,
+                    borderColor: borderColor,
+                    offset: CGSize(width: offset.width, height: 0),
+                    rotation: Double(offset.width / 30)
+                )
+                .gesture(
+                    DragGesture()
+                        .onChanged { gesture in
+                            offset = gesture.translation
                         }
-                    )
-                    .padding(30)
-                    .offset(x: offset.width, y: 0)
-                    .rotationEffect(.degrees(Double(offset.width / 30)))
-                    .gesture(
-                        DragGesture()
-                            .onChanged { gesture in
-                                offset = gesture.translation
-                            }
-                            .onEnded { _ in
-                                if abs(offset.width) > 100 {
-                                    withAnimation {
-                                        offset = CGSize(width: offset.width > 0 ? 1000 : -1000, height: 0)
-                                    }
-                                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-                                        offset = .zero
-                                        if currentIndex < questions.count - 1 {
-                                            currentIndex += 1
-                                        }
-                                    }
-                                } else {
-                                    // Card is not swiped, reset offset
-                                    withAnimation {
-                                        offset = .zero
+                        .onEnded { _ in
+                            if abs(offset.width) > 100 {
+                                withAnimation {
+                                    offset = CGSize(width: offset.width > 0 ? 1000 : -1000, height: 0)
+                                }
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                                    offset = .zero
+                                    if currentIndex < questions.count - 1 {
+                                        currentIndex += 1
                                     }
                                 }
+                            } else {
+                                withAnimation {
+                                    offset = .zero
+                                }
                             }
-                    )
-                    .zIndex(1)
+                        }
+                )
+                .zIndex(1)
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
+    }
+}
+
+struct CardView: View {
+    let questionNumber: Int
+    let questionText: String
+    @Binding var rating: Int
+    let isInteractive: Bool
+    let cardColor: Color
+    let borderColor: Color
+    let offset: CGSize
+    let rotation: Double
+
+    var body: some View {
+        RoundedRectangle(cornerRadius: 30)
+            .fill(cardColor)
+            .overlay(
+                RoundedRectangle(cornerRadius: 30)
+                    .stroke(borderColor, lineWidth: 2)
+            )
+            .overlay(
+                VStack {
+                    Text("Question \(questionNumber)")
+                        .font(.headline)
+                        .foregroundColor(.black)
+                        .padding(.bottom, 10)
+                    Text(questionText)
+                        .font(.title3)
+                        .foregroundColor(.black)
+                        .multilineTextAlignment(.center)
+                        .padding()
+                    VStack(spacing: 4) {
+                        HeartRatingView(rating: $rating, isInteractive: isInteractive)
+                            .padding(.bottom, 18)
+                        Text("🤍 = Negative ❤️ = Positive")
+                            .font(.caption)
+                            .foregroundColor(.gray)
+                    }
+                    .padding(.top, 8)
+                }
+            )
+            .padding(30)
+            .offset(offset)
+            .rotationEffect(.degrees(rotation))
     }
 }
 
