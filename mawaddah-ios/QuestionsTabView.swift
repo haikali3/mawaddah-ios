@@ -74,7 +74,8 @@ struct SwipableFlashCardView: View {
     @State private var ratings: [Int: Int] = [:] // questionIndex: rating
 
     // Centralized card color
-    let cardColor = Color(red: 238/255, green: 219/255, blue: 248/255)
+    let cardColor = Color(red: 238/255, green: 219/255, blue: 248/255) // light purple
+    let borderColor = Color(red: 80/255, green: 0/255, blue: 80/255) // dark purple
 
     var isDragging: Bool {
         offset.width != 0
@@ -84,8 +85,12 @@ struct SwipableFlashCardView: View {
         ZStack {
             // Show next card only when dragging
             if isDragging, currentIndex + 1 < questions.count {
-                RoundedRectangle(cornerRadius: 25)
+                RoundedRectangle(cornerRadius: 30)
                     .fill(cardColor)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 30)
+                            .stroke(borderColor, lineWidth: 2)
+                    )
                     .overlay(
                         VStack {
                             Text("Question \(currentIndex + 2)")
@@ -97,19 +102,21 @@ struct SwipableFlashCardView: View {
                                 .foregroundColor(.black)
                                 .multilineTextAlignment(.center)
                                 .padding()
-                            StarRatingView(rating: .constant(ratings[currentIndex + 1] ?? 0), isInteractive: false)
+                            StarRatingView(rating: .constant(ratings[currentIndex + 1] ?? 3), isInteractive: false)
                         }
                     )
                     .padding(30)
-                    .scaleEffect()
-                    .offset()
                     .zIndex(0)
             }
 
             // Current card (always visible)
             if currentIndex < questions.count {
-                RoundedRectangle(cornerRadius: 25)
+                RoundedRectangle(cornerRadius: 30)
                     .fill(cardColor)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 30)
+                            .stroke(borderColor, lineWidth: 2)
+                    )
                     .overlay(
                         VStack {
                             Text("Question \(currentIndex + 1)")
@@ -124,13 +131,13 @@ struct SwipableFlashCardView: View {
                             VStack(spacing: 4) {
                                 StarRatingView(
                                     rating: Binding(
-                                        get: { ratings[currentIndex] ?? 0 },
+                                        get: { ratings[currentIndex] ?? 3 },
                                         set: { ratings[currentIndex] = $0 }
                                     ),
                                     isInteractive: true
                                 )
                                 .padding(.bottom, 18)
-                                Text("🤍 = Negative, ❤️ = Positive")
+                                Text("🤍 = Negative ❤️ = Positive")
                                     .font(.caption)
                                     .foregroundColor(.gray)
                             }
@@ -167,7 +174,7 @@ struct SwipableFlashCardView: View {
                     .zIndex(1)
             }
         }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
     }
 }
 
@@ -177,10 +184,10 @@ struct StarRatingView: View {
     var isInteractive: Bool = true
 
     var body: some View {
-        HStack(spacing: 4) {
+        HStack(spacing: 2) {
             ForEach(1...5, id: \.self) { heart in
                 Text(heart <= rating ? "❤️" : "🤍")
-                    .font(.title2)
+                    .font(.system(size: 40))
                     .onTapGesture {
                         if isInteractive {
                             rating = heart
