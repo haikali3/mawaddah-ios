@@ -21,7 +21,7 @@ struct QuestionPickerButton: View {
                     )
                 Text("Question \(viewModel.index + 1) of \(viewModel.questions.count)")
                     .font(.headline)
-                    .foregroundColor(.black)
+                    .foregroundColor(borderColour)
             }
             .frame(width: 350, height: 50)
         }
@@ -36,13 +36,13 @@ struct QuestionPickerButton: View {
                     } label: {
                         HStack {
                             Text("\(question.id).")
-                                .foregroundColor(.gray)
+                                .foregroundColor(borderColour)
                             Text(question.text)
-                                .foregroundColor(.primary)
+                                .foregroundColor(borderColour)
                             Spacer()
                             if question.id == viewModel.currentQuestion.id {
                                 Image(systemName: "checkmark")
-                                    .foregroundColor(.blue)
+                                    .foregroundColor(borderColour)
                             }
                         }
                     }
@@ -50,7 +50,7 @@ struct QuestionPickerButton: View {
                 .navigationTitle("Select Question")
                 .toolbar {
                     ToolbarItem(placement: .navigationBarTrailing) {
-                        Button("Done") { showQuestionPicker = false }
+                        Button("Done") { showQuestionPicker = true }
                     }
                 }
             }
