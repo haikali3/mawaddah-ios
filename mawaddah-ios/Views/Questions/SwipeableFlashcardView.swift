@@ -43,10 +43,10 @@ struct SwipeableFlashcardView: View {
                     }
                     .onEnded { _ in
                         if abs(offset.width) > swipeThreshold {
-                            withAnimation {
+                            withAnimation(.easeOut(duration: 0.2)) {
                                 offset = CGSize(width: offset.width > 0 ? 1000 : -1000, height: 0)
                             }
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
                                 offset = .zero
                                 viewModel.showNextCard()
                             }
