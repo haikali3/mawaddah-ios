@@ -7,4 +7,5 @@ import Foundation
 struct Question: Identifiable, Codable, Hashable {
     let id: Int
     let text: String
+    let tags: [String]
 }
