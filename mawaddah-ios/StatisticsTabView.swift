@@ -9,4 +9,4 @@ struct StatisticsTabView: View {
                 .foregroundColor(.black)
         }
     }
-} 
+}

@@ -59,4 +59,4 @@ struct SwipeableFlashcardView: View {
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
     }
-} 
+}
