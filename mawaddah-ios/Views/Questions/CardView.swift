@@ -32,6 +32,22 @@ struct CardView: View {
                 .foregroundColor(.black)
                 .multilineTextAlignment(.center)
                 .padding()
+            // Tags display
+            if !question.tags.isEmpty {
+                HStack(spacing: 8) {
+                    ForEach(question.tags, id: \.self) { tag in
+                        Text(tag)
+                            .font(.caption)
+                            .foregroundColor(.white)
+                            .padding(.horizontal, 8)
+                            .padding(.vertical, 4)
+                            .background(Color.purple.opacity(0.7))
+                            .cornerRadius(12)
+                    }
+                }
+                .frame(maxWidth: .infinity)
+                .padding(.bottom, 10)
+            }
             VStack(spacing: 4) {
                 HeartRatingView(rating: $rating, isInteractive: isInteractive)
                     .padding(.bottom, 18)
