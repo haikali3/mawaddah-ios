@@ -4,6 +4,11 @@ struct CardView: View {
     let question: Question
     @Binding var rating: Int
     let isInteractive: Bool
+    var onPrevious: (() -> Void)? = nil
+    var onNext: (() -> Void)? = nil
+    var isPreviousDisabled: Bool = false
+    var isNextDisabled: Bool = false
+    
 
     // Use shared colors
     private let cardColour = QuestionColors.cardColour
@@ -58,6 +63,32 @@ struct CardView: View {
                     .foregroundColor(.gray)
             }
             .padding(.top, 8)
+            // Accessibility navigation buttons inside the card
+            HStack(spacing: 30) {
+                Button(action: { onPrevious?() }) {
+                    Label("Previous", systemImage: "chevron.left")
+                        .labelStyle(IconOnlyLabelStyle())
+                        .font(.title2)
+                        .foregroundColor(isPreviousDisabled ? .gray : borderColour)
+                        .padding(12)
+                        .background(Color.purple.opacity(0.15))
+                        .clipShape(Circle())
+                }
+                .disabled(isPreviousDisabled)
+                .opacity(isPreviousDisabled ? 0.4 : 1.0)
+                Button(action: { onNext?() }) {
+                    Label("Next", systemImage: "chevron.right")
+                        .labelStyle(IconOnlyLabelStyle())
+                        .font(.title2)
+                        .foregroundColor(isNextDisabled ? .gray : borderColour)
+                        .padding(12)
+                        .background(Color.purple.opacity(0.15))
+                        .clipShape(Circle())
+                }
+                .disabled(isNextDisabled)
+                .opacity(isNextDisabled ? 0.4 : 1.0)
+            }
+            .padding(.top, 12)
         }
     }
 } 

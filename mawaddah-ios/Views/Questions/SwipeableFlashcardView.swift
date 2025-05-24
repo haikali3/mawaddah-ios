@@ -4,6 +4,7 @@ struct SwipeableFlashcardView: View {
     @ObservedObject var viewModel: QuestionDeckViewModel
     @State private var offset = CGSize.zero
 
+    private let borderColour = QuestionColors.borderColour
     private let swipeThreshold: CGFloat = 100
 
     private var isDragging: Bool {
@@ -26,37 +27,69 @@ struct SwipeableFlashcardView: View {
             }
 
             // Current card (always visible)
-            CardView(
-                question: viewModel.currentQuestion,
-                rating: Binding(
-                    get: { viewModel.ratings[viewModel.currentQuestion.id] ?? 3 },
-                    set: { viewModel.ratings[viewModel.currentQuestion.id] = $0 }
-                ),
-                isInteractive: true
-            )
-            .offset(x: offset.width)
-            .rotationEffect(.degrees(Double(offset.width / 30)))
-            .gesture(
-                DragGesture()
-                    .onChanged { gesture in
-                        offset = gesture.translation
-                    }
-                    .onEnded { _ in
-                        if abs(offset.width) > swipeThreshold {
-                            withAnimation(.easeOut(duration: 0.2)) {
-                                offset = CGSize(width: offset.width > 0 ? 1000 : -1000, height: 0)
-                            }
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
-                                offset = .zero
-                                viewModel.showNextCard()
-                            }
-                        } else {
-                            withAnimation { offset = .zero }
+            if let question = viewModel.currentQuestion {
+                CardView(
+                    question: question,
+                    rating: Binding(
+                        get: { viewModel.ratings[question.id] ?? 3 },
+                        set: { viewModel.ratings[question.id] = $0 }
+                    ),
+                    isInteractive: true,
+                    onPrevious: {
+                        if viewModel.index > 0 {
+                            animateToNextCard(direction: -1)
                         }
-                    }
-            )
-            .zIndex(1)
+                    },
+                    onNext: {
+                        if viewModel.index < viewModel.questions.count - 1 {
+                            animateToNextCard(direction: 1)
+                        }
+                    },
+                    isPreviousDisabled: viewModel.index == 0,
+                    isNextDisabled: viewModel.index == viewModel.questions.count - 1
+                )
+                .offset(x: offset.width)
+                .rotationEffect(.degrees(Double(offset.width / 30)))
+                .gesture(
+                    DragGesture()
+                        .onChanged { gesture in
+                            offset = gesture.translation
+                        }
+                        .onEnded { _ in
+                            if abs(offset.width) > swipeThreshold {
+                                withAnimation(.easeOut(duration: 0.2)) {
+                                    offset = CGSize(width: offset.width > 0 ? 1000 : -1000, height: 0)
+                                }
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                                    offset = .zero
+                                    viewModel.showNextCard()
+                                }
+                            } else {
+                                withAnimation { offset = .zero }
+                            }
+                        }
+                )
+                .zIndex(1)
+            } else {
+                Text("No more questions!")
+                    .font(.title)
+                    .foregroundColor(borderColour)
+            }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
+    }
+
+    private func animateToNextCard(direction: CGFloat) {
+        withAnimation(.easeOut(duration: 0.4)) {
+            offset = CGSize(width: direction * 1000, height: 0)
+        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
+            offset = .zero
+            if direction > 0 {
+                viewModel.index += 1 // Next
+            } else {
+                viewModel.index -= 1 // Previous
+            }
+        }
     }
 }

@@ -16,7 +16,14 @@ final class QuestionDeckViewModel: ObservableObject {
     }
 
     // MARK: - Computed helpers
-    var currentQuestion: Question { questions[index] }
+    var currentQuestion: Question? {
+        guard index < questions.count else { return nil }
+        return questions[index]
+    }
+    
+    var isAtEnd: Bool {
+        index >= questions.count
+    }
 
     // MARK: - Intents
     /// Updates the rating for the supplied question.
@@ -26,7 +33,7 @@ final class QuestionDeckViewModel: ObservableObject {
 
     /// Advances to the next card if possible.
     func showNextCard() {
-        guard index < questions.count - 1 else { return }
+        guard index < questions.count else { return }
         index += 1
     }
 } 
