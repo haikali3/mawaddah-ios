@@ -35,12 +35,12 @@ struct SwipeableFlashcardView: View {
                 isInteractive: true,
                 onPrevious: {
                     if viewModel.index > 0 {
-                        viewModel.index -= 1
+                        animateToNextCard(direction: -1)
                     }
                 },
                 onNext: {
                     if viewModel.index < viewModel.questions.count - 1 {
-                        viewModel.index += 1
+                        animateToNextCard(direction: 1)
                     }
                 },
                 isPreviousDisabled: viewModel.index == 0,
@@ -70,5 +70,19 @@ struct SwipeableFlashcardView: View {
             .zIndex(1)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
+    }
+
+    private func animateToNextCard(direction: CGFloat) {
+        withAnimation(.easeOut(duration: 0.4)) {
+            offset = CGSize(width: direction * 1000, height: 0)
+        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
+            offset = .zero
+            if direction > 0 {
+                viewModel.index += 1 // Next
+            } else {
+                viewModel.index -= 1 // Previous
+            }
+        }
     }
 }
