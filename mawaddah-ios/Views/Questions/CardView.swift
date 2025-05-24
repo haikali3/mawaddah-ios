@@ -69,22 +69,24 @@ struct CardView: View {
                     Label("Previous", systemImage: "chevron.left")
                         .labelStyle(IconOnlyLabelStyle())
                         .font(.title2)
-                        .foregroundColor(borderColour)
+                        .foregroundColor(isPreviousDisabled ? .gray : borderColour)
                         .padding(12)
                         .background(Color.purple.opacity(0.15))
                         .clipShape(Circle())
                 }
                 .disabled(isPreviousDisabled)
+                .opacity(isPreviousDisabled ? 0.4 : 1.0)
                 Button(action: { onNext?() }) {
                     Label("Next", systemImage: "chevron.right")
                         .labelStyle(IconOnlyLabelStyle())
                         .font(.title2)
-                        .foregroundColor(borderColour)
+                        .foregroundColor(isNextDisabled ? .gray : borderColour)
                         .padding(12)
                         .background(Color.purple.opacity(0.15))
                         .clipShape(Circle())
                 }
                 .disabled(isNextDisabled)
+                .opacity(isNextDisabled ? 0.4 : 1.0)
             }
             .padding(.top, 12)
         }
