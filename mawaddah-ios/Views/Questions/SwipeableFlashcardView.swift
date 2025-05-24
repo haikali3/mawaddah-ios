@@ -4,6 +4,7 @@ struct SwipeableFlashcardView: View {
     @ObservedObject var viewModel: QuestionDeckViewModel
     @State private var offset = CGSize.zero
 
+    private let borderColour = QuestionColors.borderColour
     private let swipeThreshold: CGFloat = 100
 
     private var isDragging: Bool {
@@ -72,7 +73,7 @@ struct SwipeableFlashcardView: View {
             } else {
                 Text("No more questions!")
                     .font(.title)
-                    .foregroundColor(.gray)
+                    .foregroundColor(borderColour)
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
