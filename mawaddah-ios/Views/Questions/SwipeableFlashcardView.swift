@@ -32,7 +32,19 @@ struct SwipeableFlashcardView: View {
                     get: { viewModel.ratings[viewModel.currentQuestion.id] ?? 3 },
                     set: { viewModel.ratings[viewModel.currentQuestion.id] = $0 }
                 ),
-                isInteractive: true
+                isInteractive: true,
+                onPrevious: {
+                    if viewModel.index > 0 {
+                        viewModel.index -= 1
+                    }
+                },
+                onNext: {
+                    if viewModel.index < viewModel.questions.count - 1 {
+                        viewModel.index += 1
+                    }
+                },
+                isPreviousDisabled: viewModel.index == 0,
+                isNextDisabled: viewModel.index == viewModel.questions.count - 1
             )
             .offset(x: offset.width)
             .rotationEffect(.degrees(Double(offset.width / 30)))
