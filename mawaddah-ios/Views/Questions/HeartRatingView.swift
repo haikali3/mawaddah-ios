@@ -7,8 +7,8 @@ struct HeartRatingView: View {
     var body: some View {
         HStack(spacing: 2) {
             ForEach(1...5, id: \.self) { heart in
-                Text(heart <= rating ? "❤️" : "🤍")
-                    .font(.system(size: 40))
+                Text(heart <= rating ? "❤️" : "😔")
+                    .font(.system(size: 45))
                     .onTapGesture {
                         if isInteractive {
                             rating = heart

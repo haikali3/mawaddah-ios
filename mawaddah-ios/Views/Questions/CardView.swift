@@ -26,15 +26,14 @@ struct CardView: View {
             Text("Question \(question.id)")
                 .font(.headline)
                 .foregroundColor(.black)
-                .padding(.bottom, 10)
+                .padding(.bottom, 40)
             Text(question.text)
                 .font(.title3)
                 .foregroundColor(.black)
                 .multilineTextAlignment(.center)
-                .padding()
             // Tags display
             if !question.tags.isEmpty {
-                HStack(spacing: 8) {
+                HStack(spacing: 3) {
                     ForEach(question.tags, id: \.self) { tag in
                         Text(tag)
                             .font(.caption)
@@ -51,7 +50,10 @@ struct CardView: View {
             VStack(spacing: 4) {
                 HeartRatingView(rating: $rating, isInteractive: isInteractive)
                     .padding(.bottom, 18)
-                Text("🤍 = Negative ❤️ = Positive")
+                Text("Tap on the emotes to rate the question")
+                    .font(.caption)
+                    .foregroundColor(.gray)
+                Text("Swipe left to skip, swipe right to rate") 
                     .font(.caption)
                     .foregroundColor(.gray)
             }

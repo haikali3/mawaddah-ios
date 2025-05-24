@@ -50,7 +50,7 @@ struct QuestionPickerButton: View {
                 .navigationTitle("Select Question")
                 .toolbar {
                     ToolbarItem(placement: .navigationBarTrailing) {
-                        Button("Done") { showQuestionPicker = true }
+                        Button("Done") { showQuestionPicker = false }
                     }
                 }
             }
