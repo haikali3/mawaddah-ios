@@ -5,7 +5,7 @@ import SwiftUI
 final class QuestionDeckViewModel: ObservableObject {
 
     // MARK: - Published properties
-    @Published var index: Int = 0                       // Current question index
+    @Published var index: Int = 0                       // current question index
     @Published var ratings: [Int: Int] = [:]            // questionID → rating (1…5)
 
     // MARK: - Data source
@@ -17,12 +17,14 @@ final class QuestionDeckViewModel: ObservableObject {
 
     // MARK: - Computed helpers
     var currentQuestion: Question? {
-        guard index < questions.count else { return nil }
+        guard index >= 0 && index < questions.count else { return nil }
         return questions[index]
     }
-    
-    var isAtEnd: Bool {
-        index >= questions.count
+
+    /// Safely returns the next question, or nil if at the end.
+    var nextQuestion: Question? {
+        let next = index + 1
+        return next < questions.count ? questions[next] : nil
     }
 
     // MARK: - Intents
@@ -31,9 +33,15 @@ final class QuestionDeckViewModel: ObservableObject {
         ratings[question.id] = value
     }
 
-    /// Advances to the next card if possible.
+    /// Moves to the next card if possible.
     func showNextCard() {
-        guard index < questions.count else { return }
+        guard index >= 0 && index < questions.count - 1 else { return }
         index += 1
     }
-} 
+
+    /// Moves to the previous card if possible.
+    func showPreviousCard() {
+        guard index > 0 else { return }
+        index -= 1
+    }
+}
