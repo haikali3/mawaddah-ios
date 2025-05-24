@@ -71,14 +71,8 @@ struct CardView: View {
                         .font(.title2)
                         .foregroundColor(borderColour)
                         .padding(12)
-                        .background(
-                            Circle()
-                                .fill(Color.purple.opacity(0.15))
-                                .overlay(
-                                    Circle()
-                                        .stroke(borderColour, lineWidth: 2)
-                                )
-                        )
+                        .background(Color.purple.opacity(0.15))
+                        .clipShape(Circle())
                 }
                 .disabled(isPreviousDisabled)
                 Button(action: { onNext?() }) {
@@ -87,14 +81,8 @@ struct CardView: View {
                         .font(.title2)
                         .foregroundColor(borderColour)
                         .padding(12)
-                        .background(
-                            Circle()
-                                .fill(Color.purple.opacity(0.15))
-                                .overlay(
-                                    Circle()
-                                        .stroke(borderColour, lineWidth: 2)
-                                )
-                        )
+                        .background(Color.purple.opacity(0.15))
+                        .clipShape(Circle())
                 }
                 .disabled(isNextDisabled)
             }
