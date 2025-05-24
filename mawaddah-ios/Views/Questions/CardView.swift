@@ -69,18 +69,32 @@ struct CardView: View {
                     Label("Previous", systemImage: "chevron.left")
                         .labelStyle(IconOnlyLabelStyle())
                         .font(.title2)
+                        .foregroundColor(borderColour)
                         .padding(12)
-                        .background(Color.purple.opacity(0.15))
-                        .clipShape(Circle())
+                        .background(
+                            Circle()
+                                .fill(Color.purple.opacity(0.15))
+                                .overlay(
+                                    Circle()
+                                        .stroke(borderColour, lineWidth: 2)
+                                )
+                        )
                 }
                 .disabled(isPreviousDisabled)
                 Button(action: { onNext?() }) {
                     Label("Next", systemImage: "chevron.right")
                         .labelStyle(IconOnlyLabelStyle())
                         .font(.title2)
+                        .foregroundColor(borderColour)
                         .padding(12)
-                        .background(Color.purple.opacity(0.15))
-                        .clipShape(Circle())
+                        .background(
+                            Circle()
+                                .fill(Color.purple.opacity(0.15))
+                                .overlay(
+                                    Circle()
+                                        .stroke(borderColour, lineWidth: 2)
+                                )
+                        )
                 }
                 .disabled(isNextDisabled)
             }
