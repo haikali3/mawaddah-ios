@@ -27,7 +27,7 @@ struct SwipeableFlashcardView: View {
                 .zIndex(0)
             }
 
-            // Current card or “no more” message
+            // Current card or "no more" message
             if let question = viewModel.currentQuestion {
                 CardView(
                     question: question,
@@ -123,8 +123,8 @@ struct SwipeableFlashcardView: View {
             } else {
                 viewModel.showPreviousCard()
             }
-            // Then reset offset
-            withAnimation { offset = .zero }
+            // Then reset offset immediately without animation
+            offset = .zero
             isAnimating = false
         }
     }
