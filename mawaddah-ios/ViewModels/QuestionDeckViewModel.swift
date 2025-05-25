@@ -35,7 +35,7 @@ final class QuestionDeckViewModel: ObservableObject {
 
     /// Moves to the next card if possible.
     func showNextCard() {
-        guard index >= 0 && index < questions.count - 1 else { return }
+        guard index < questions.count - 1 else { return }
         index += 1
     }
 
