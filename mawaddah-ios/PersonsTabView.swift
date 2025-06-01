@@ -13,7 +13,7 @@ struct PersonsTabView: View {
       VStack {
         Text("People")
           .font(.largeTitle)
-          .foregroundColor(.black)
+          .foregroundColor(borderColour)
           .padding(.top, 20)
 
         List {
@@ -26,17 +26,22 @@ struct PersonsTabView: View {
                 Spacer()
                 if person.id == personStore.selectedPersonID {
                   Image(systemName: "checkmark")
-                    .foregroundColor(.blue)
+                    .foregroundColor(borderColour)
                 }
               }
             }
           }
+          .foregroundColor(borderColour)
         }
+        .overlay(
+          RoundedRectangle(cornerRadius: 30)
+            .stroke(borderColour, lineWidth: 2)
+        )
         .listStyle(PlainListStyle())
         .scrollContentBackground(.hidden)
         .background(
           RoundedRectangle(cornerRadius: 12)
-            .fill(Color.white.opacity(0.8))
+            .fill(cardColour)
         )
         .frame(maxHeight: 300)
 
