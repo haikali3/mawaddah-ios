@@ -10,6 +10,6 @@ struct QuestionsTabView: View {
       QuestionPickerButton(viewModel: viewModel, showQuestionPicker: $showQuestionPicker)
         .padding(.bottom, 30)
     }
-    .background(Color.purple.opacity(0.3).ignoresSafeArea())
+    .background(Color.appBackground.ignoresSafeArea())
   }
 }

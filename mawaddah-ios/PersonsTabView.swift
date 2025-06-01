@@ -9,7 +9,7 @@ struct PersonsTabView: View {
 
   var body: some View {
     ZStack {
-      cardColour.ignoresSafeArea()
+      Color.appBackground.ignoresSafeArea()
       VStack {
         Text("People")
           .font(.largeTitle)
