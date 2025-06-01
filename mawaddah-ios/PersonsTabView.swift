@@ -14,34 +14,29 @@ struct PersonsTabView: View {
         Text("People")
           .font(.largeTitle)
           .foregroundColor(borderColour)
-          .padding(.top, 20)
 
-        ZStack {
-          List {
-            ForEach(personStore.persons) { person in
-              Button(action: {
-                personStore.selectPerson(person)
-              }) {
-                HStack {
-                  Text(person.name)
-                  Spacer()
-                  if person.id == personStore.selectedPersonID {
-                    Image(systemName: "checkmark")
-                      .foregroundColor(borderColour)
-                  }
+        List {
+          ForEach(personStore.persons) { person in
+            Button(action: {
+              personStore.selectPerson(person)
+            }) {
+              HStack {
+                Text(person.name)
+                if person.id == personStore.selectedPersonID {
+                  Image(systemName: "checkmark")
+                    .foregroundColor(borderColour)
                 }
               }
             }
-            .foregroundColor(borderColour)
-            .listRowBackground(cardColour)
           }
-          .clipShape(RoundedRectangle(cornerRadius: 30))
+          .foregroundColor(borderColour)
+          .listRowBackground(cardColour)
         }
+        .clipShape(RoundedRectangle(cornerRadius: 30))
         .overlay(
           RoundedRectangle(cornerRadius: 30)
             .stroke(borderColour, lineWidth: 2)
         )
-        // .listStyle(PlainListStyle())
         .listStyle(DefaultListStyle())
         .scrollContentBackground(.hidden)
         .background(
