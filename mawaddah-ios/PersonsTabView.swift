@@ -33,6 +33,7 @@ struct PersonsTabView: View {
               }
             }
             .foregroundColor(borderColour)
+            .listRowBackground(cardColour)
           }
           .clipShape(RoundedRectangle(cornerRadius: 30))
         }
