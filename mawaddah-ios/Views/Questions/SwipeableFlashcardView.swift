@@ -66,7 +66,6 @@ struct SwipeableFlashcardView: View {
           .foregroundColor(borderColour)
       }
     }
-    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
   }
 
   // MARK: - Private helpers
