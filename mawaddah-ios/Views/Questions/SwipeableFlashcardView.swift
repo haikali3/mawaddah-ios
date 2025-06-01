@@ -27,7 +27,7 @@ struct SwipeableFlashcardView: View {
                 .zIndex(0)
             }
 
-            // Current card
+            // Current card or "no more" message
             if let question = viewModel.currentQuestion {
                 CardView(
                     question: question,
@@ -53,12 +53,13 @@ struct SwipeableFlashcardView: View {
                 .rotationEffect(.degrees(Double(offset.width / 30)))
                 .gesture(
                     DragGesture()
-                        .onChanged { gesture in
-                            if !isAnimating { offset = gesture.translation }
+                        .onChanged { g in
+                            if !isAnimating { offset = g.translation }
                         }
                         .onEnded { _ in handleSwipeEnd() }
                 )
                 .zIndex(1)
+
             } else {
                 Text("No more questions!")
                     .font(.title)
@@ -73,29 +74,41 @@ struct SwipeableFlashcardView: View {
     private func handleSwipeEnd() {
         guard !isAnimating else { return }
 
-        let swipedRight = offset.width > 0                // capture BEFORE reset
-        if abs(offset.width) > swipeThreshold {
-            isAnimating = true
-            withAnimation(.easeOut(duration: 0.2)) {
-                offset = CGSize(width: swipedRight ? 1000 : -1000, height: 0)
-            }
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
-                // Navigate first …
-                if swipedRight {
-                    viewModel.showNextCard()
-                } else {
-                    viewModel.showPreviousCard()
-                }
-                // … then reset offset.
+        let swipedRight = offset.width > 0
+        let passedThreshold = abs(offset.width) > swipeThreshold
+
+        // If you swipe past threshold but there's nowhere to go, just spring back
+        if passedThreshold {
+            if swipedRight, viewModel.nextQuestion == nil {
                 withAnimation { offset = .zero }
-                isAnimating = false
+                return
+            }
+            if !swipedRight, viewModel.index == 0 {
+                withAnimation { offset = .zero }
+                return
             }
         } else {
+            // Didn't pass threshold → just spring back
             withAnimation { offset = .zero }
+            return
+        }
+
+        // Otherwise animate off-screen then change index
+        isAnimating = true
+        withAnimation(.easeOut(duration: 0.4)) {
+            offset = CGSize(width: swipedRight ? 1000 : -1000, height: 0)
+        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
+            if swipedRight {
+                viewModel.showNextCard()
+            } else {
+                viewModel.showPreviousCard()
+            }
+            withAnimation { offset = .zero }
+            isAnimating = false
         }
     }
 
-    /// Slides the card off-screen via buttons.
     private func animateToNextCard(direction: CGFloat) {
         guard !isAnimating else { return }
         isAnimating = true
@@ -103,7 +116,6 @@ struct SwipeableFlashcardView: View {
         withAnimation(.easeOut(duration: 0.4)) {
             offset = CGSize(width: direction * 1000, height: 0)
         }
-
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
             // Change index FIRST
             if direction > 0 {
@@ -111,8 +123,8 @@ struct SwipeableFlashcardView: View {
             } else {
                 viewModel.showPreviousCard()
             }
-            // Then reset offset
-            withAnimation { offset = .zero }
+            // Then reset offset immediately without animation
+            offset = .zero
             isAnimating = false
         }
     }
