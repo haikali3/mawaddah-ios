@@ -8,10 +8,10 @@ struct PersonsTabView: View {
     ZStack {
       Color.purple.opacity(0.3).ignoresSafeArea()
       VStack {
-        Text("Persons")
-          .font(.title)
+        Text("People")
+          .font(.largeTitle)
           .foregroundColor(.black)
-          .padding(.top)
+          .padding(.top, 20)
 
         List {
           ForEach(personStore.persons) { person in
@@ -29,7 +29,12 @@ struct PersonsTabView: View {
             }
           }
         }
-        .listStyle(InsetGroupedListStyle())
+        .listStyle(PlainListStyle())
+        .scrollContentBackground(.hidden)
+        .background(
+          RoundedRectangle(cornerRadius: 12)
+            .fill(Color.white.opacity(0.8))
+        )
         .frame(maxHeight: 300)
 
         HStack {
@@ -41,13 +46,19 @@ struct PersonsTabView: View {
             newPersonName = ""
           }) {
             Image(systemName: "plus.circle.fill")
-              .font(.title2)
+              .font(.system(size: 30))
+              .buttonStyle(.borderedProminent)
           }
-          .padding(.leading, 8)
+          .padding(.leading, 10)
         }
         .padding()
+        .background(
+          RoundedRectangle(cornerRadius: 12)
+            .fill(Color.white.opacity(0.8))
+        )
         Spacer()
       }
+      .padding(30)
     }
   }
 }
