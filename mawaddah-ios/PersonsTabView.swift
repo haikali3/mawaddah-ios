@@ -4,6 +4,9 @@ struct PersonsTabView: View {
   @EnvironmentObject var personStore: PersonStore
   @State private var newPersonName: String = ""
 
+  private let cardColour = QuestionColors.cardColour
+  private let borderColour = QuestionColors.borderColour
+
   var body: some View {
     ZStack {
       Color.purple.opacity(0.3).ignoresSafeArea()
@@ -39,7 +42,6 @@ struct PersonsTabView: View {
 
         HStack {
           TextField("New person name", text: $newPersonName)
-            .textFieldStyle(RoundedBorderTextFieldStyle())
           Button(action: {
             guard !newPersonName.isEmpty else { return }
             personStore.addPerson(name: newPersonName)
@@ -48,13 +50,17 @@ struct PersonsTabView: View {
             Image(systemName: "plus.circle.fill")
               .font(.system(size: 30))
               .buttonStyle(.borderedProminent)
+              .foregroundColor(borderColour)
           }
-          .padding(.leading, 10)
         }
         .padding()
         .background(
-          RoundedRectangle(cornerRadius: 12)
+          RoundedRectangle(cornerRadius: 30)
             .fill(Color.white.opacity(0.8))
+        )
+        .overlay(
+          RoundedRectangle(cornerRadius: 30)
+            .stroke(borderColour, lineWidth: 2)
         )
         Spacer()
       }
