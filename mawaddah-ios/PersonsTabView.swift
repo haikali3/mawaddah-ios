@@ -16,34 +16,37 @@ struct PersonsTabView: View {
           .foregroundColor(borderColour)
           .padding(.top, 20)
 
-        List {
-          ForEach(personStore.persons) { person in
-            Button(action: {
-              personStore.selectPerson(person)
-            }) {
-              HStack {
-                Text(person.name)
-                Spacer()
-                if person.id == personStore.selectedPersonID {
-                  Image(systemName: "checkmark")
-                    .foregroundColor(borderColour)
+        ZStack {
+          List {
+            ForEach(personStore.persons) { person in
+              Button(action: {
+                personStore.selectPerson(person)
+              }) {
+                HStack {
+                  Text(person.name)
+                  Spacer()
+                  if person.id == personStore.selectedPersonID {
+                    Image(systemName: "checkmark")
+                      .foregroundColor(borderColour)
+                  }
                 }
               }
             }
+            .foregroundColor(borderColour)
           }
-          .foregroundColor(borderColour)
+          .clipShape(RoundedRectangle(cornerRadius: 30))
         }
         .overlay(
           RoundedRectangle(cornerRadius: 30)
             .stroke(borderColour, lineWidth: 2)
         )
-        .listStyle(PlainListStyle())
+        // .listStyle(PlainListStyle())
+        .listStyle(DefaultListStyle())
         .scrollContentBackground(.hidden)
         .background(
-          RoundedRectangle(cornerRadius: 12)
+          RoundedRectangle(cornerRadius: 30)
             .fill(cardColour)
         )
-        .frame(maxHeight: 300)
 
         HStack {
           TextField("New person name", text: $newPersonName)
@@ -67,7 +70,6 @@ struct PersonsTabView: View {
           RoundedRectangle(cornerRadius: 30)
             .stroke(borderColour, lineWidth: 2)
         )
-        Spacer()
       }
       .padding(30)
     }
