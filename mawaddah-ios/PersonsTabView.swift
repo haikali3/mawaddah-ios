@@ -11,11 +11,12 @@ struct PersonsTabView: View {
     ZStack {
       Color.appBackground.ignoresSafeArea()
       VStack {
-        Text("People")
-          .font(.largeTitle)
-          .foregroundColor(borderColour)
-
         List {
+          Text("People")
+            .font(.largeTitle)
+            .foregroundColor(borderColour)
+            .listRowBackground(cardColour)
+
           ForEach(personStore.persons) { person in
             Button(action: {
               personStore.selectPerson(person)
