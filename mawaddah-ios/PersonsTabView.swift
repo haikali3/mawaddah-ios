@@ -29,6 +29,9 @@ struct PersonsTabView: View {
               }
             }
           }
+          .onDelete { offsets in
+            personStore.removePerson(at: offsets)
+          }
           .foregroundColor(borderColour)
           .listRowBackground(cardColour)
         }

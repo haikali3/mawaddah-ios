@@ -91,4 +91,22 @@ final class PersonStore: ObservableObject {
     guard let pid = selectedPersonID else { return [:] }
     return ratings[pid] ?? [:]
   }
+
+  /// Remove persons at specified offsets and their ratings, updating the selected person if needed.
+  func removePerson(at offsets: IndexSet) {
+    // Remove ratings for deleted persons
+    for index in offsets {
+      let id = persons[index].id
+      ratings.removeValue(forKey: id)
+    }
+    // Remove persons from the list
+    persons.remove(atOffsets: offsets)
+    // If the selected person was deleted, select the first person
+    if let selected = selectedPersonID,
+      !persons.contains(where: { $0.id == selected })
+    {
+      selectedPersonID = persons.first?.id
+    }
+    save()
+  }
 }
