@@ -11,11 +11,12 @@ struct PersonsTabView: View {
     ZStack {
       Color.appBackground.ignoresSafeArea()
       VStack {
-        Text("People")
-          .font(.largeTitle)
-          .foregroundColor(borderColour)
-
         List {
+          Text("People")
+            .font(.largeTitle)
+            .foregroundColor(borderColour)
+            .listRowBackground(cardColour)
+
           ForEach(personStore.persons) { person in
             Button(action: {
               personStore.selectPerson(person)
@@ -28,6 +29,9 @@ struct PersonsTabView: View {
                 }
               }
             }
+          }
+          .onDelete { offsets in
+            personStore.removePerson(at: offsets)
           }
           .foregroundColor(borderColour)
           .listRowBackground(cardColour)
@@ -57,7 +61,7 @@ struct PersonsTabView: View {
               .foregroundColor(borderColour)
           }
         }
-        .padding()
+        .padding(EdgeInsets(top: 10, leading: 25, bottom: 10, trailing: 10))
         .background(
           RoundedRectangle(cornerRadius: 30)
             .fill(Color.white.opacity(0.8))
