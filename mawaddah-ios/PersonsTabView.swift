@@ -70,6 +70,7 @@ struct PersonsTabView: View {
           RoundedRectangle(cornerRadius: 30)
             .stroke(borderColour, lineWidth: 2)
         )
+        .padding(.top, 20)
       }
       .padding(30)
     }
