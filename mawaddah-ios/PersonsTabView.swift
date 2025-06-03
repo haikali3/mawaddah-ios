@@ -61,8 +61,7 @@ struct PersonsTabView: View {
               .foregroundColor(borderColour)
           }
         }
-        .padding(.leading, 15)
-        .padding(10)
+        .padding(EdgeInsets(top: 10, leading: 25, bottom: 10, trailing: 10))
         .background(
           RoundedRectangle(cornerRadius: 30)
             .fill(Color.white.opacity(0.8))
