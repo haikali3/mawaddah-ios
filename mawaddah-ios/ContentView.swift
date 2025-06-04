@@ -9,9 +9,10 @@ import SwiftUI
 
 struct ContentView: View {
   @State private var selectedTab = 0
+  @StateObject private var questionDeckViewModel = QuestionDeckViewModel()
   var body: some View {
     TabView(selection: $selectedTab) {
-      QuestionsTabView()
+      QuestionsTabView(viewModel: questionDeckViewModel)
         .tabItem {
           Image(systemName: "questionmark.circle")
           Text("Questions")
@@ -40,7 +41,7 @@ struct ContentView: View {
         .tag(3)
 
       // New Search tab for searching and filtering questions
-      SearchQuestionsView()
+      SearchQuestionsView(viewModel: questionDeckViewModel, selectedTab: $selectedTab)
         .tabItem {
           Image(systemName: "magnifyingglass")
           Text("Search")

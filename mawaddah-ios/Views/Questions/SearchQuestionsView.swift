@@ -1,8 +1,8 @@
 import SwiftUI
 
 struct SearchQuestionsView: View {
-  @StateObject private var viewModel = QuestionDeckViewModel()
-  @State private var showDeck = false
+  @ObservedObject var viewModel: QuestionDeckViewModel
+  @Binding var selectedTab: Int
   @EnvironmentObject var personStore: PersonStore
   @State private var searchText = ""
   @State private var selectedTags = Set<String>()
@@ -57,7 +57,8 @@ struct SearchQuestionsView: View {
             Button {
               if let newIndex = viewModel.questions.firstIndex(where: { $0.id == question.id }) {
                 viewModel.index = newIndex
-                showDeck = true
+                // Switch to Questions tab
+                selectedTab = 0
               }
             } label: {
               VStack(alignment: .leading) {
@@ -80,26 +81,11 @@ struct SearchQuestionsView: View {
         .searchable(text: $searchText, prompt: "Search questions")
       }
       .navigationTitle("Search Questions")
-      .sheet(isPresented: $showDeck) {
-        SwipeableFlashcardView(viewModel: viewModel)
-          .onAppear {
-            // Load saved ratings for selected person when view appears
-            viewModel.ratings = personStore.getRatingsForSelected()
-          }
-          .onReceive(viewModel.$ratings) { newRatings in
-            for (qid, rating) in newRatings {
-              personStore.setRating(questionID: qid, rating: rating)
-            }
-          }
-          .onChange(of: personStore.selectedPersonID) { _, _ in
-            viewModel.ratings = personStore.getRatingsForSelected()
-          }
-      }
     }
   }
 }
 
 #Preview {
-  SearchQuestionsView()
+  SearchQuestionsView(viewModel: QuestionDeckViewModel(), selectedTab: .constant(4))
     .environmentObject(PersonStore())
 }
