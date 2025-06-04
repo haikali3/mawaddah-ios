@@ -35,6 +35,7 @@ struct CardView: View {
         .font(.title3)
         .foregroundColor(.black)
         .multilineTextAlignment(.center)
+        .padding(.horizontal, 20)
       // Tags display
       if !question.tags.isEmpty {
         HStack(spacing: 3) {
@@ -42,9 +43,9 @@ struct CardView: View {
             Text(tag)
               .font(.caption)
               .foregroundColor(.white)
-              .padding(.horizontal, 8)
-              .padding(.vertical, 4)
-              .background(Color.purple.opacity(0.7))
+              .padding(.horizontal, 10)
+              .padding(.vertical, 5)
+              .background(borderColour)
               .cornerRadius(12)
           }
         }

@@ -39,7 +39,6 @@ struct QuestionPickerButton: View {
                 .foregroundColor(borderColour)
               Text(question.text)
                 .foregroundColor(borderColour)
-              Spacer()
               if question.id == viewModel.currentQuestion?.id {
                 Image(systemName: "checkmark")
                   .foregroundColor(borderColour)
