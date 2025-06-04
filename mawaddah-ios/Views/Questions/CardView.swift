@@ -81,7 +81,9 @@ struct CardView: View {
           .foregroundColor(.gray)
       }
       .padding(.top, 40)
+
       // Accessibility navigation buttons inside the card
+      Spacer()
       HStack(spacing: 30) {
         Button(action: { onPrevious?() }) {
           Label("Previous", systemImage: "chevron.left")
@@ -94,6 +96,17 @@ struct CardView: View {
         }
         .disabled(isPreviousDisabled)
         .opacity(isPreviousDisabled ? 0.4 : 1.0)
+        Button(action: { onRandom?() }) {
+          Label("Random", systemImage: "dice")
+            .labelStyle(IconOnlyLabelStyle())
+            .font(.title2)
+            .foregroundColor(isRandomDisabled ? .gray : borderColour)
+            .padding(12)
+            .background(Color.purple.opacity(0.15))
+            .clipShape(Circle())
+        }
+        .disabled(isRandomDisabled)
+        .opacity(isRandomDisabled ? 0.4 : 1.0)
         Button(action: { onNext?() }) {
           Label("Next", systemImage: "chevron.right")
             .labelStyle(IconOnlyLabelStyle())
@@ -106,19 +119,7 @@ struct CardView: View {
         .disabled(isNextDisabled)
         .opacity(isNextDisabled ? 0.4 : 1.0)
       }
-      .padding(.top, 12)
-      // Randomizer button
-      Button(action: { onRandom?() }) {
-        Label("Random", systemImage: "dice")
-          .labelStyle(IconOnlyLabelStyle())
-          .font(.title2)
-          .foregroundColor(isRandomDisabled ? .gray : borderColour)
-          .padding(12)
-          .background(Color.purple.opacity(0.15))
-          .clipShape(Circle())
-      }
-      .disabled(isRandomDisabled)
-      .opacity(isRandomDisabled ? 0.4 : 1.0)
+      .padding(.bottom, 20)
     }
   }
 }
