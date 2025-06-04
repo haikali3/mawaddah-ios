@@ -57,9 +57,9 @@ struct PersonsTabView: View {
           }) {
             Image(systemName: "plus.circle.fill")
               .font(.system(size: 30))
-              .buttonStyle(.borderedProminent)
               .foregroundColor(borderColour)
           }
+          .buttonStyle(.borderedProminent)
         }
         .padding(EdgeInsets(top: 10, leading: 25, bottom: 10, trailing: 10))
         .background(
