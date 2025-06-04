@@ -36,7 +36,9 @@ struct SearchQuestionsView: View {
               .font(.caption)
               .padding(.vertical, 6)
               .padding(.horizontal, 12)
-              .background(selectedTags.contains(tag) ? QuestionColors.borderColour : QuestionColors.cardColour)
+              .background(
+                selectedTags.contains(tag) ? QuestionColors.borderColour : QuestionColors.cardColour
+              )
               .foregroundColor(selectedTags.contains(tag) ? .white : .primary)
               .cornerRadius(12)
           }
@@ -48,44 +50,54 @@ struct SearchQuestionsView: View {
   }
 
   private var questionListView: some View {
-    List(filteredQuestions) { question in
-      Button {
-        if let newIndex = viewModel.questions.firstIndex(where: { $0.id == question.id }) {
-          viewModel.index = newIndex
-          selectedTab = 0
-        }
-      } label: {
-        VStack(alignment: .leading) {
-          Text("\(question.id). \(question.text)")
-            .foregroundColor(.primary)
-          if !question.tags.isEmpty {
-            HStack(spacing: 5) {
-              ForEach(question.tags, id: \.self) { tag in
-                Text(tag)
-                  .font(.caption2)
-                  .foregroundColor(.white)
-                  .padding(.horizontal, 10)
-                  .padding(.vertical, 5)
-                  .background(QuestionColors.borderColour)
-                  .cornerRadius(12)
+    ScrollView {
+      LazyVStack {
+        ForEach(filteredQuestions) { question in
+          Button {
+            if let newIndex = viewModel.questions.firstIndex(where: { $0.id == question.id }) {
+              viewModel.index = newIndex
+              selectedTab = 0
+            }
+          } label: {
+            VStack(alignment: .leading, spacing: 5) {
+              Text("\(question.id). \(question.text)")
+                .foregroundColor(.primary)
+              if !question.tags.isEmpty {
+                HStack(spacing: 5) {
+                  ForEach(question.tags, id: \.self) { tag in
+                    Text(tag)
+                      .font(.caption)
+                      .foregroundColor(.white)
+                      .padding(.horizontal, 10)
+                      .padding(.vertical, 5)
+                      .background(QuestionColors.borderColour)
+                      .cornerRadius(12)
+                  }
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
               }
             }
+            .padding()
+            .cornerRadius(30)
+            .padding(.horizontal, 5)
           }
         }
       }
     }
-    .listStyle(.plain)
-    .searchable(text: $searchText, prompt: "Search questions")
   }
 
   var body: some View {
     NavigationStack {
-      VStack {
-        if !allTags.isEmpty { tagFilterView }
-        questionListView
+      ZStack {
+        Color.appBackground.ignoresSafeArea()
+        VStack {
+          if !allTags.isEmpty { tagFilterView }
+          questionListView
+        }
+        .navigationTitle("Search Questions")
       }
-      .navigationTitle("Search Questions")
     }
+    .searchable(text: $searchText, prompt: "Search questions")
   }
 }
 
