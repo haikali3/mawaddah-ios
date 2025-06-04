@@ -62,6 +62,7 @@ struct SearchQuestionsView: View {
             VStack(alignment: .leading, spacing: 5) {
               Text("\(question.id). \(question.text)")
                 .foregroundColor(.primary)
+                .multilineTextAlignment(.leading)
               if !question.tags.isEmpty {
                 HStack(spacing: 5) {
                   ForEach(question.tags, id: \.self) { tag in
