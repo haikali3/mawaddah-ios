@@ -12,7 +12,7 @@ struct PersonsTabView: View {
       Color.appBackground.ignoresSafeArea()
       VStack {
         List {
-          Text("People")
+          Text("Partners")
             .font(.largeTitle)
             .foregroundColor(borderColour)
             .listRowBackground(cardColour)
