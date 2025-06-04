@@ -8,6 +8,7 @@ struct CardView: View {
   var onNext: (() -> Void)? = nil
   var isPreviousDisabled: Bool = false
   var isNextDisabled: Bool = false
+  @EnvironmentObject var personStore: PersonStore
 
   // Use shared colors
   private let cardColour = QuestionColors.cardColour
@@ -27,6 +28,20 @@ struct CardView: View {
   @ViewBuilder
   private var content: some View {
     VStack {
+      // Person selection
+      if let selected = personStore.persons.first(where: { $0.id == personStore.selectedPersonID })
+      {
+        Text("\(selected.name)")
+          .font(.headline)
+          .foregroundColor(borderColour)
+          .padding(.bottom, 20)
+      } else {
+        Text("No person selected")
+          .font(.headline)
+          .foregroundColor(.gray)
+          .padding(.bottom, 20)
+      }
+
       Text("Question \(question.id)")
         .font(.headline)
         .foregroundColor(.black)
@@ -35,6 +50,7 @@ struct CardView: View {
         .font(.title3)
         .foregroundColor(.black)
         .multilineTextAlignment(.center)
+        .padding(.horizontal, 20)
       // Tags display
       if !question.tags.isEmpty {
         HStack(spacing: 3) {
@@ -42,9 +58,9 @@ struct CardView: View {
             Text(tag)
               .font(.caption)
               .foregroundColor(.white)
-              .padding(.horizontal, 8)
-              .padding(.vertical, 4)
-              .background(Color.purple.opacity(0.7))
+              .padding(.horizontal, 10)
+              .padding(.vertical, 5)
+              .background(borderColour)
               .cornerRadius(12)
           }
         }
