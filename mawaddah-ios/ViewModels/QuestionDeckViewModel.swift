@@ -44,4 +44,14 @@ final class QuestionDeckViewModel: ObservableObject {
     guard index > 0 else { return }
     index -= 1
   }
+
+  /// Selects a random question and updates the index.
+  func showRandomCard() {
+    guard !questions.isEmpty else { return }
+    var newIndex: Int
+    repeat {
+      newIndex = Int.random(in: 0..<questions.count)
+    } while questions.count > 1 && newIndex == index
+    index = newIndex
+  }
 }

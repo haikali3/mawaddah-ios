@@ -6,8 +6,10 @@ struct CardView: View {
   let isInteractive: Bool
   var onPrevious: (() -> Void)? = nil
   var onNext: (() -> Void)? = nil
+  var onRandom: (() -> Void)? = nil
   var isPreviousDisabled: Bool = false
   var isNextDisabled: Bool = false
+  var isRandomDisabled: Bool = false
   @EnvironmentObject var personStore: PersonStore
 
   // Use shared colors
@@ -105,6 +107,18 @@ struct CardView: View {
         .opacity(isNextDisabled ? 0.4 : 1.0)
       }
       .padding(.top, 12)
+      // Randomizer button
+      Button(action: { onRandom?() }) {
+        Label("Random", systemImage: "dice")
+          .labelStyle(IconOnlyLabelStyle())
+          .font(.title2)
+          .foregroundColor(isRandomDisabled ? .gray : borderColour)
+          .padding(12)
+          .background(Color.purple.opacity(0.15))
+          .clipShape(Circle())
+      }
+      .disabled(isRandomDisabled)
+      .opacity(isRandomDisabled ? 0.4 : 1.0)
     }
   }
 }
