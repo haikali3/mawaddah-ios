@@ -47,8 +47,14 @@ struct SwipeableFlashcardView: View {
               animateToNextCard(direction: 1)
             }
           },
+          onRandom: {
+            if !isAnimating {
+              viewModel.showRandomCard()
+            }
+          },
           isPreviousDisabled: viewModel.index == 0 || isAnimating,
-          isNextDisabled: viewModel.index == viewModel.questions.count - 1 || isAnimating
+          isNextDisabled: viewModel.index == viewModel.questions.count - 1 || isAnimating,
+          isRandomDisabled: isAnimating
         )
         .offset(x: offset.width)
         .rotationEffect(.degrees(Double(offset.width / 30)))
