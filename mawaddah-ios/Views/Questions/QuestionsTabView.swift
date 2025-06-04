@@ -19,7 +19,7 @@ struct QuestionsTabView: View {
             personStore.setRating(questionID: qid, rating: rating)
           }
         }
-        .onChange(of: personStore.selectedPersonID) { _ in
+        .onChange(of: personStore.selectedPersonID) { oldValue, newValue in
           // Reload ratings when switching persons
           viewModel.ratings = personStore.getRatingsForSelected()
           viewModel.index = 0
