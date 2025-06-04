@@ -29,61 +29,62 @@ struct CardView: View {
 
   @ViewBuilder
   private var content: some View {
-    VStack {
-      // Person selection
-      if let selected = personStore.persons.first(where: { $0.id == personStore.selectedPersonID })
-      {
-        Text("\(selected.name)")
-          .font(.headline)
-          .foregroundColor(borderColour)
-          .padding(.bottom, 20)
-      } else {
-        Text("No partner selected")
-          .font(.headline)
-          .foregroundColor(.gray)
-          .padding(.bottom, 20)
-      }
-
-      Text("Question \(question.id)")
-        .font(.headline)
-        .foregroundColor(.black)
-        .padding(.bottom, 40)
-      Text(question.text)
-        .font(.title3)
-        .foregroundColor(.black)
-        .multilineTextAlignment(.center)
-        .padding(.horizontal, 20)
-      // Tags display
-      if !question.tags.isEmpty {
-        HStack(spacing: 5) {
-          ForEach(question.tags, id: \.self) { tag in
-            Text(tag)
-              .font(.caption)
-              .foregroundColor(.white)
-              .padding(.horizontal, 10)
-              .padding(.vertical, 5)
-              .background(borderColour)
-              .cornerRadius(12)
-          }
-        }
-        .frame(maxWidth: .infinity)
-        .padding(.bottom, 10)
-      }
-
+    ZStack {
+      // Main content stacked at the top
       VStack {
-        HeartRatingView(rating: $rating, isInteractive: isInteractive)
-          .padding(.bottom, 18)
-        Text("Tap on the emotes to rate the question")
-          .font(.caption)
-          .foregroundColor(.gray)
-        Text("Swipe right for next card, left for previous")
-          .font(.caption)
-          .foregroundColor(.gray)
-      }
-      .padding(.top, 40)
+        // Person selection
+        if let selected = personStore.persons.first(where: { $0.id == personStore.selectedPersonID }
+        ) {
+          Text("\(selected.name)")
+            .font(.headline)
+            .foregroundColor(borderColour)
+            .padding(.bottom, 20)
+        } else {
+          Text("No partner selected")
+            .font(.headline)
+            .foregroundColor(.gray)
+            .padding(.bottom, 20)
+        }
 
-      // Accessibility navigation buttons inside the card
-      Spacer()
+        Text("Question \(question.id)")
+          .font(.headline)
+          .foregroundColor(.black)
+          .padding(.bottom, 40)
+        Text(question.text)
+          .font(.title3)
+          .foregroundColor(.black)
+          .multilineTextAlignment(.center)
+          .padding(.horizontal, 20)
+        // Tags display
+        if !question.tags.isEmpty {
+          HStack(spacing: 5) {
+            ForEach(question.tags, id: \.self) { tag in
+              Text(tag)
+                .font(.caption)
+                .foregroundColor(.white)
+                .padding(.horizontal, 10)
+                .padding(.vertical, 5)
+                .background(borderColour)
+                .cornerRadius(12)
+            }
+          }
+          .frame(maxWidth: .infinity)
+          .padding(.bottom, 10)
+        }
+
+        VStack {
+          HeartRatingView(rating: $rating, isInteractive: isInteractive)
+            .padding(.bottom, 18)
+          Text("Tap on the emotes to rate the question")
+            .font(.caption)
+            .foregroundColor(.gray)
+          Text("Swipe right for next card, left for previous")
+            .font(.caption)
+            .foregroundColor(.gray)
+        }
+        .padding(.top, 40)
+      }
+      // Bottom navigation and randomizer buttons aligned to bottom
       HStack(spacing: 30) {
         Button(action: { onPrevious?() }) {
           Label("Previous", systemImage: "chevron.left")
@@ -96,6 +97,7 @@ struct CardView: View {
         }
         .disabled(isPreviousDisabled)
         .opacity(isPreviousDisabled ? 0.4 : 1.0)
+
         Button(action: { onRandom?() }) {
           Label("Random", systemImage: "dice")
             .labelStyle(IconOnlyLabelStyle())
@@ -107,6 +109,7 @@ struct CardView: View {
         }
         .disabled(isRandomDisabled)
         .opacity(isRandomDisabled ? 0.4 : 1.0)
+
         Button(action: { onNext?() }) {
           Label("Next", systemImage: "chevron.right")
             .labelStyle(IconOnlyLabelStyle())
@@ -119,6 +122,7 @@ struct CardView: View {
         .disabled(isNextDisabled)
         .opacity(isNextDisabled ? 0.4 : 1.0)
       }
+      .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
       .padding(.bottom, 20)
     }
   }
