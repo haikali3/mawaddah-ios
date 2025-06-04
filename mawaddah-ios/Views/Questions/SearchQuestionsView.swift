@@ -101,8 +101,3 @@ struct SearchQuestionsView: View {
     .searchable(text: $searchText, prompt: "Search questions")
   }
 }
-
-#Preview {
-  SearchQuestionsView(viewModel: QuestionDeckViewModel(), selectedTab: .constant(4))
-    .environmentObject(PersonStore())
-}
