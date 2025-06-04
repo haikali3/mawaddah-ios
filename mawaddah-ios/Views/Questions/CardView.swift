@@ -36,7 +36,7 @@ struct CardView: View {
           .foregroundColor(borderColour)
           .padding(.bottom, 20)
       } else {
-        Text("No person selected")
+        Text("No partner selected")
           .font(.headline)
           .foregroundColor(.gray)
           .padding(.bottom, 20)
@@ -53,7 +53,7 @@ struct CardView: View {
         .padding(.horizontal, 20)
       // Tags display
       if !question.tags.isEmpty {
-        HStack(spacing: 3) {
+        HStack(spacing: 5) {
           ForEach(question.tags, id: \.self) { tag in
             Text(tag)
               .font(.caption)
@@ -67,17 +67,18 @@ struct CardView: View {
         .frame(maxWidth: .infinity)
         .padding(.bottom, 10)
       }
-      VStack(spacing: 4) {
+
+      VStack {
         HeartRatingView(rating: $rating, isInteractive: isInteractive)
           .padding(.bottom, 18)
         Text("Tap on the emotes to rate the question")
           .font(.caption)
           .foregroundColor(.gray)
-        Text("Swipe left to skip, swipe right to rate")
+        Text("Swipe right for next card, left for previous")
           .font(.caption)
           .foregroundColor(.gray)
       }
-      .padding(.top, 8)
+      .padding(.top, 40)
       // Accessibility navigation buttons inside the card
       HStack(spacing: 30) {
         Button(action: { onPrevious?() }) {
