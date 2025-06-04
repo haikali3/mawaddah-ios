@@ -4,6 +4,7 @@ struct SwipeableFlashcardView: View {
   @ObservedObject var viewModel: QuestionDeckViewModel
   @State private var offset = CGSize.zero
   @State private var isAnimating = false  // true while a card is sliding
+  @EnvironmentObject var personStore: PersonStore
 
   private let borderColour = QuestionColors.borderColour
   private let swipeThreshold: CGFloat = 100

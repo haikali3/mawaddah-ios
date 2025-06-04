@@ -8,6 +8,7 @@ struct CardView: View {
   var onNext: (() -> Void)? = nil
   var isPreviousDisabled: Bool = false
   var isNextDisabled: Bool = false
+  @EnvironmentObject var personStore: PersonStore
 
   // Use shared colors
   private let cardColour = QuestionColors.cardColour
@@ -27,6 +28,20 @@ struct CardView: View {
   @ViewBuilder
   private var content: some View {
     VStack {
+      // Person selection
+      if let selected = personStore.persons.first(where: { $0.id == personStore.selectedPersonID })
+      {
+        Text("\(selected.name)")
+          .font(.headline)
+          .foregroundColor(borderColour)
+          .padding(.bottom, 20)
+      } else {
+        Text("No person selected")
+          .font(.headline)
+          .foregroundColor(.gray)
+          .padding(.bottom, 20)
+      }
+
       Text("Question \(question.id)")
         .font(.headline)
         .foregroundColor(.black)
