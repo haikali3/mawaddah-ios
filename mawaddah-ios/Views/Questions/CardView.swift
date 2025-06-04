@@ -32,20 +32,6 @@ struct CardView: View {
     ZStack {
       // Main content stacked at the top
       VStack {
-        // Person selection
-        if let selected = personStore.persons.first(where: { $0.id == personStore.selectedPersonID }
-        ) {
-          Text("\(selected.name)")
-            .font(.headline)
-            .foregroundColor(borderColour)
-            .padding(.bottom, 20)
-        } else {
-          Text("No partner selected")
-            .font(.headline)
-            .foregroundColor(.gray)
-            .padding(.bottom, 20)
-        }
-
         Text("Question \(question.id)")
           .font(.headline)
           .foregroundColor(.black)
@@ -84,6 +70,21 @@ struct CardView: View {
         }
         .padding(.top, 40)
       }
+      // Person selection header pinned to top
+      Group {
+        if let selected = personStore.persons.first(where: { $0.id == personStore.selectedPersonID }
+        ) {
+          Text("\(selected.name)")
+            .font(.headline)
+            .foregroundColor(borderColour)
+        } else {
+          Text("No partner selected")
+            .font(.headline)
+            .foregroundColor(.gray)
+        }
+      }
+      .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+      .padding(.top, 20)
       // Bottom navigation and randomizer buttons aligned to bottom
       HStack(spacing: 30) {
         Button(action: { onPrevious?() }) {
