@@ -38,6 +38,14 @@ struct ContentView: View {
           Text("AI Analysis")
         }
         .tag(3)
+
+      // New Search tab for searching and filtering questions
+      SearchQuestionsView()
+        .tabItem {
+          Image(systemName: "magnifyingglass")
+          Text("Search")
+        }
+        .tag(4)
     }
   }
 }
