@@ -37,38 +37,38 @@ struct QuestionPickerButton: View {
       NavigationStack {
         // Tag filter view
         if !allTags.isEmpty {
-          ScrollView(.horizontal, showsIndicators: false) {
-            HStack(spacing: 8) {
-
-              // Clear Filters button
-              Button(action: { selectedTags.removeAll() }) {
-                Text("Clear")
-                  .font(.caption)
-                  .padding(.vertical, 6)
-                  .padding(.horizontal, 12)
-                  .background(QuestionColors.borderColour)
-                  .foregroundColor(.white)
-                  .cornerRadius(12)
-              }
-
-              // Tag filters
-              ForEach(allTags, id: \.self) { tag in
-                TagView(
-                  tag: tag,
-                  isSelected: selectedTags.contains(tag),
-                  action: {
-                    if selectedTags.contains(tag) {
-                      selectedTags.remove(tag)
-                    } else {
-                      selectedTags.insert(tag)
-                    }
-                  }
-                )
-              }
+          HStack(spacing: 8) {
+            // Clear Filters button
+            Button(action: { selectedTags.removeAll() }) {
+              Image(systemName: "xmark.circle.fill")
+                .font(.system(size: 16))
+                .padding(.vertical, 6)
+                .padding(.horizontal, 12)
+                .background(QuestionColors.borderColour)
+                .foregroundColor(.white)
+                .cornerRadius(12)
             }
-            .padding(.vertical, 8)
-            .padding(.horizontal)
+
+            ScrollView(.horizontal, showsIndicators: false) {
+              HStack(spacing: 8) {
+                ForEach(allTags, id: \.self) { tag in
+                  TagView(
+                    tag: tag,
+                    isSelected: selectedTags.contains(tag),
+                    action: {
+                      if selectedTags.contains(tag) {
+                        selectedTags.remove(tag)
+                      } else {
+                        selectedTags.insert(tag)
+                      }
+                    }
+                  )
+                }
+              }
+              .padding(.vertical, 8)
+            }
           }
+          .padding(.horizontal)
         }
         List {
           ForEach(filteredQuestions) { question in
