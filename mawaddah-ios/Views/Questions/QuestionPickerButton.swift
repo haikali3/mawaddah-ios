@@ -39,6 +39,15 @@ struct QuestionPickerButton: View {
         if !allTags.isEmpty {
           ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: 8) {
+              Button(action: { selectedTags.removeAll() }) {
+                Text("🗑️")
+                  .font(.caption)
+                  .padding(.vertical, 6)
+                  .padding(.horizontal, 12)
+                  .background(QuestionColors.cardColour)
+                  .foregroundColor(.primary)
+                  .cornerRadius(12)
+              }
               ForEach(allTags, id: \.self) { tag in
                 Button(action: {
                   if selectedTags.contains(tag) {
