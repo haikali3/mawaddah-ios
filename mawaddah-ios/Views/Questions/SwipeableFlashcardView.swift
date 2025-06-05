@@ -13,19 +13,36 @@ struct SwipeableFlashcardView: View {
     offset.width != 0
   }
 
+  private var previousQuestion: Question? {
+    let prevIndex = viewModel.index - 1
+    return prevIndex >= 0 ? viewModel.questions[prevIndex] : nil
+  }
+
   var body: some View {
     ZStack {
-      // Next card (only visible during a drag)
-      if isDragging, let next = viewModel.nextQuestion {
-        CardView(
-          question: next,
-          rating: Binding(
-            get: { viewModel.ratings[next.id] ?? 3 },
-            set: { viewModel.ratings[next.id] = $0 }
-          ),
-          isInteractive: false
-        )
-        .zIndex(0)
+      // Card behind during a drag (either next or previous)
+      if isDragging {
+        if offset.width > 0, let next = viewModel.nextQuestion {
+          CardView(
+            question: next,
+            rating: Binding(
+              get: { viewModel.ratings[next.id] ?? 3 },
+              set: { viewModel.ratings[next.id] = $0 }
+            ),
+            isInteractive: false
+          )
+          .zIndex(0)
+        } else if offset.width < 0, let prev = previousQuestion {
+          CardView(
+            question: prev,
+            rating: Binding(
+              get: { viewModel.ratings[prev.id] ?? 3 },
+              set: { viewModel.ratings[prev.id] = $0 }
+            ),
+            isInteractive: false
+          )
+          .zIndex(0)
+        }
       }
 
       // Current card or "no more" message
@@ -83,36 +100,22 @@ struct SwipeableFlashcardView: View {
     let swipedRight = offset.width > 0
     let passedThreshold = abs(offset.width) > swipeThreshold
 
-    // If you swipe past threshold but there's nowhere to go, just spring back
-    if passedThreshold {
-      if swipedRight, viewModel.nextQuestion == nil {
-        withAnimation { offset = .zero }
-        return
-      }
-      if !swipedRight, viewModel.index == 0 {
-        withAnimation { offset = .zero }
-        return
-      }
-    } else {
-      // Didn't pass threshold → just spring back
+    // If didn't pass threshold or at bounds, spring back
+    if !passedThreshold {
+      withAnimation { offset = .zero }
+      return
+    }
+    if swipedRight, viewModel.nextQuestion == nil {
+      withAnimation { offset = .zero }
+      return
+    }
+    if !swipedRight, viewModel.index == 0 {
       withAnimation { offset = .zero }
       return
     }
 
-    // Otherwise animate off-screen then change index
-    isAnimating = true
-    withAnimation(.easeOut(duration: 0.4)) {
-      offset = CGSize(width: swipedRight ? 1000 : -1000, height: 0)
-    }
-    DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
-      if swipedRight {
-        viewModel.showNextCard()
-      } else {
-        viewModel.showPreviousCard()
-      }
-      withAnimation { offset = .zero }
-      isAnimating = false
-    }
+    // Otherwise use the same animation as buttons
+    animateToNextCard(direction: swipedRight ? 1 : -1)
   }
 
   private func animateToNextCard(direction: CGFloat) {

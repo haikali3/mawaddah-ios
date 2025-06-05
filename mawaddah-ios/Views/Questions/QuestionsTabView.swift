@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct QuestionsTabView: View {
-  @StateObject private var viewModel = QuestionDeckViewModel()
+  @ObservedObject var viewModel: QuestionDeckViewModel
   @State private var showQuestionPicker = false
   @EnvironmentObject var personStore: PersonStore
 
@@ -11,7 +11,6 @@ struct QuestionsTabView: View {
         .onAppear {
           // Load saved ratings for selected person when view appears
           viewModel.ratings = personStore.getRatingsForSelected()
-          viewModel.index = 0
         }
         .onReceive(viewModel.$ratings) { newRatings in
           // Persist ratings to the selected person
@@ -22,7 +21,6 @@ struct QuestionsTabView: View {
         .onChange(of: personStore.selectedPersonID) { oldValue, newValue in
           // Reload ratings when switching persons
           viewModel.ratings = personStore.getRatingsForSelected()
-          viewModel.index = 0
         }
       QuestionPickerButton(viewModel: viewModel, showQuestionPicker: $showQuestionPicker)
         .padding(.bottom, 30)
