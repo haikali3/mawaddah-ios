@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct ContentView: View {
-  @State private var selectedTab = 4
+  @State private var selectedTab = 0
   @StateObject private var questionDeckViewModel = QuestionDeckViewModel()
   var body: some View {
     TabView(selection: $selectedTab) {

@@ -3,6 +3,14 @@ import SwiftUI
 struct QuestionPickerButton: View {
   @ObservedObject var viewModel: QuestionDeckViewModel
   @Binding var showQuestionPicker: Bool
+  @State private var searchText = ""
+  @State private var selectedTags = Set<String>()
+  private var filteredQuestions: [Question] {
+    viewModel.questions.filtered(by: searchText, tags: selectedTags)
+  }
+  private var allTags: [String] {
+    viewModel.questions.uniqueTags()
+  }
 
   // Use shared colors
   private let cardColour = QuestionColors.cardColour
@@ -27,25 +35,58 @@ struct QuestionPickerButton: View {
     }
     .sheet(isPresented: $showQuestionPicker) {
       NavigationStack {
-        List(viewModel.questions) { question in
-          Button {
-            if let newIndex = viewModel.questions.firstIndex(where: { $0.id == question.id }) {
-              viewModel.index = newIndex
+        // Tag filter view
+        if !allTags.isEmpty {
+          ScrollView(.horizontal, showsIndicators: false) {
+            HStack(spacing: 8) {
+              ForEach(allTags, id: \.self) { tag in
+                Button(action: {
+                  if selectedTags.contains(tag) {
+                    selectedTags.remove(tag)
+                  } else {
+                    selectedTags.insert(tag)
+                  }
+                }) {
+                  Text(tag)
+                    .font(.caption)
+                    .padding(.vertical, 6)
+                    .padding(.horizontal, 12)
+                    .background(
+                      selectedTags.contains(tag)
+                        ? QuestionColors.borderColour : QuestionColors.cardColour
+                    )
+                    .foregroundColor(selectedTags.contains(tag) ? .white : .primary)
+                    .cornerRadius(12)
+                }
+              }
             }
-            showQuestionPicker = false
-          } label: {
-            HStack {
-              Text("\(question.id).")
-                .foregroundColor(borderColour)
-              Text(question.text)
-                .foregroundColor(borderColour)
-              if question.id == viewModel.currentQuestion?.id {
-                Image(systemName: "checkmark")
+            .padding(.vertical, 8)
+            .padding(.horizontal)
+          }
+          .listRowSeparator(.hidden)
+        }
+        List {
+          ForEach(filteredQuestions) { question in
+            Button {
+              if let newIndex = viewModel.questions.firstIndex(where: { $0.id == question.id }) {
+                viewModel.index = newIndex
+              }
+              showQuestionPicker = false
+            } label: {
+              HStack {
+                Text("\(question.id).")
                   .foregroundColor(borderColour)
+                Text(question.text)
+                  .foregroundColor(borderColour)
+                if question.id == viewModel.currentQuestion?.id {
+                  Image(systemName: "checkmark")
+                    .foregroundColor(borderColour)
+                }
               }
             }
           }
         }
+        .searchable(text: $searchText, prompt: "Search questions")
         .navigationTitle("Select Question")
         .toolbar {
           ToolbarItem(placement: .navigationBarTrailing) {

@@ -9,12 +9,14 @@ struct SearchQuestionsView: View {
 
   // Filtered questions based on search text and selected tags
   private var filteredQuestions: [Question] {
-    viewModel.questions.filtered(by: searchText, tags: selectedTags)
+    viewModel.questions.filter { question in
+      searchText.isEmpty || question.text.localizedCaseInsensitiveContains(searchText)
+    }
   }
 
   // All unique tags
   private var allTags: [String] {
-    viewModel.questions.uniqueTags()
+    Array(Set(viewModel.questions.flatMap { $0.tags }))
   }
 
   // MARK: - Subviews
