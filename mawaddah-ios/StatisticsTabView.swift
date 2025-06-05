@@ -9,6 +9,7 @@ struct MoodData: Identifiable {
 
 struct StatisticsTabView: View {
   @State private var selectedTimeFrame: TimeFrame = .week
+  @EnvironmentObject var personStore: PersonStore
 
   enum TimeFrame: String, CaseIterable {
     case week = "Week"
@@ -19,8 +20,7 @@ struct StatisticsTabView: View {
   var body: some View {
     ScrollView {
       VStack(spacing: 20) {
-        TimeFramePicker(selectedTimeFrame: $selectedTimeFrame)
-        MoodTrackingChart()
+        QuestionRatingsChart()
         CommunicationStats()
         GoalsProgressChart()
       }
@@ -30,39 +30,49 @@ struct StatisticsTabView: View {
   }
 }
 
-struct TimeFramePicker: View {
-  @Binding var selectedTimeFrame: StatisticsTabView.TimeFrame
+struct QuestionRatingsChart: View {
+  @EnvironmentObject var personStore: PersonStore
 
-  var body: some View {
-    Picker("Time Frame", selection: $selectedTimeFrame) {
-      ForEach(StatisticsTabView.TimeFrame.allCases, id: \.self) { timeFrame in
-        Text(timeFrame.rawValue).tag(timeFrame)
-      }
+  var ratingsData: [MoodData] {
+    guard let selectedPersonID = personStore.selectedPersonID,
+      let personRatings = personStore.ratings[selectedPersonID]
+    else {
+      return []
     }
-    .pickerStyle(.segmented)
-    .padding(.horizontal)
-  }
-}
 
-struct MoodTrackingChart: View {
-  let moodData: [MoodData] = (0..<7).map { day in
-    MoodData(day: "Day \(day + 1)", mood: Double.random(in: 1...5))
+    return personRatings.sorted { $0.key < $1.key }.map { questionID, rating in
+      MoodData(day: "Q\(questionID)", mood: Double(rating))
+    }
   }
 
   var body: some View {
     VStack(alignment: .leading) {
-      Text("Mood Tracking")
+      Text("Question Ratings")
         .font(.headline)
         .padding(.horizontal)
 
-      Chart(moodData) { data in
-        LineMark(
-          x: .value("Day", data.day),
-          y: .value("Mood", data.mood)
-        )
+      if ratingsData.isEmpty {
+        Text("No ratings yet")
+          .foregroundColor(.gray)
+          .frame(maxWidth: .infinity, alignment: .center)
+          .padding()
+      } else {
+        Chart(ratingsData) { data in
+          LineMark(
+            x: .value("Question", data.day),
+            y: .value("Rating", data.mood)
+          )
+          .foregroundStyle(Color.purple.gradient)
+
+          PointMark(
+            x: .value("Question", data.day),
+            y: .value("Rating", data.mood)
+          )
+          .foregroundStyle(Color.purple)
+        }
+        .frame(height: 200)
+        .padding()
       }
-      .frame(height: 200)
-      .padding()
     }
     .background(Color.white)
     .cornerRadius(12)
@@ -72,17 +82,32 @@ struct MoodTrackingChart: View {
 }
 
 struct CommunicationStats: View {
+  @EnvironmentObject var personStore: PersonStore
+
+  var stats: (totalQuestions: Int, averageRating: Double) {
+    guard let selectedPersonID = personStore.selectedPersonID,
+      let personRatings = personStore.ratings[selectedPersonID]
+    else {
+      return (0, 0)
+    }
+
+    let total = personRatings.count
+    let average = total > 0 ? Double(personRatings.values.reduce(0, +)) / Double(total) : 0
+
+    return (total, average)
+  }
+
   var body: some View {
     HStack(spacing: 15) {
       StatCard(
-        title: "Messages",
-        value: "128",
-        icon: "message.fill"
+        title: "Questions Rated",
+        value: "\(stats.totalQuestions)",
+        icon: "questionmark.circle.fill"
       )
 
       StatCard(
-        title: "Quality Time",
-        value: "4.5h",
+        title: "Average Rating",
+        value: String(format: "%.1f", stats.averageRating),
         icon: "heart.fill"
       )
     }
@@ -91,22 +116,61 @@ struct CommunicationStats: View {
 }
 
 struct GoalsProgressChart: View {
+  @EnvironmentObject var personStore: PersonStore
+
+  var tagRatings: [(tag: String, average: Double)] {
+    guard let selectedPersonID = personStore.selectedPersonID,
+      let personRatings = personStore.ratings[selectedPersonID]
+    else {
+      return []
+    }
+
+    // Get all questions from the repository
+    let questions = QuestionRepository.loadAll()
+
+    // Create a dictionary to store tag ratings
+    var tagRatingsDict: [String: [Int]] = [:]
+
+    // For each rated question, add its rating to its tags
+    for (questionID, rating) in personRatings {
+      if let question = questions.first(where: { $0.id == questionID }) {
+        for tag in question.tags {
+          tagRatingsDict[tag, default: []].append(rating)
+        }
+      }
+    }
+
+    // Calculate averages and sort by average rating
+    return tagRatingsDict.map { tag, ratings in
+      let average = Double(ratings.reduce(0, +)) / Double(ratings.count)
+      return (tag: tag, average: average)
+    }.sorted { $0.average > $1.average }
+  }
+
   var body: some View {
     VStack(alignment: .leading) {
-      Text("Goals Progress")
+      Text("Ratings by Category")
         .font(.headline)
         .padding(.horizontal)
 
-      Chart {
-        ForEach(["Personal", "Relationship", "Health"], id: \.self) { category in
-          BarMark(
-            x: .value("Category", category),
-            y: .value("Progress", Double.random(in: 0...100))
-          )
+      if tagRatings.isEmpty {
+        Text("No ratings yet")
+          .foregroundColor(.gray)
+          .frame(maxWidth: .infinity, alignment: .center)
+          .padding()
+      } else {
+        Chart {
+          ForEach(tagRatings, id: \.tag) { item in
+            BarMark(
+              x: .value("Category", item.tag),
+              y: .value("Rating", item.average)
+            )
+            .foregroundStyle(Color.purple.gradient)
+          }
         }
+        .frame(height: 200)
+        .padding()
       }
-      .frame(height: 200)
-      .padding()
     }
     .background(Color.white)
     .cornerRadius(12)
