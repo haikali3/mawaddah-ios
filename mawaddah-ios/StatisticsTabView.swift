@@ -165,7 +165,7 @@ struct GoalsProgressChart: View {
               x: .value("Category", item.tag),
               y: .value("Rating", item.average)
             )
-            .foregroundStyle(Color.purple.gradient)
+            .foregroundStyle(QuestionColors.borderColour.gradient)
           }
         }
         .frame(height: 200)
