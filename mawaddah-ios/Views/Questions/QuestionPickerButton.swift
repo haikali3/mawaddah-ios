@@ -40,7 +40,7 @@ struct QuestionPickerButton: View {
           ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: 8) {
               Button(action: { selectedTags.removeAll() }) {
-                Text("🗑️")
+                Text("Clear Filters")
                   .font(.caption)
                   .padding(.vertical, 6)
                   .padding(.horizontal, 12)
@@ -49,30 +49,22 @@ struct QuestionPickerButton: View {
                   .cornerRadius(12)
               }
               ForEach(allTags, id: \.self) { tag in
-                Button(action: {
-                  if selectedTags.contains(tag) {
-                    selectedTags.remove(tag)
-                  } else {
-                    selectedTags.insert(tag)
+                TagView(
+                  tag: tag,
+                  isSelected: selectedTags.contains(tag),
+                  action: {
+                    if selectedTags.contains(tag) {
+                      selectedTags.remove(tag)
+                    } else {
+                      selectedTags.insert(tag)
+                    }
                   }
-                }) {
-                  Text(tag)
-                    .font(.caption)
-                    .padding(.vertical, 6)
-                    .padding(.horizontal, 12)
-                    .background(
-                      selectedTags.contains(tag)
-                        ? QuestionColors.borderColour : QuestionColors.cardColour
-                    )
-                    .foregroundColor(selectedTags.contains(tag) ? .white : .primary)
-                    .cornerRadius(12)
-                }
+                )
               }
             }
             .padding(.vertical, 8)
             .padding(.horizontal)
           }
-          .listRowSeparator(.hidden)
         }
         List {
           ForEach(filteredQuestions) { question in
@@ -103,6 +95,31 @@ struct QuestionPickerButton: View {
           }
         }
       }
+    }
+  }
+}
+
+// TagView: Reusable tag component
+struct TagView: View {
+  let tag: String
+  let isSelected: Bool
+  let action: () -> Void
+
+  var body: some View {
+    Button(action: action) {
+      Text(tag)
+        .font(.caption)
+        .padding(.vertical, 6)
+        .padding(.horizontal, 12)
+        .background(
+          isSelected ? QuestionColors.borderColour : QuestionColors.cardColour
+        )
+        .foregroundColor(isSelected ? .white : .primary)
+        .cornerRadius(12)
+        .overlay(
+          RoundedRectangle(cornerRadius: 12)
+            .stroke(QuestionColors.borderColour, lineWidth: 1.5)
+        )
     }
   }
 }
