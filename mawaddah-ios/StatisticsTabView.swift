@@ -19,7 +19,7 @@ struct StatisticsTabView: View {
 
   var body: some View {
     ScrollView {
-      VStack(spacing: 20) {
+      VStack(spacing: 15) {
         QuestionRatingsChart()
         CommunicationStats()
         GoalsProgressChart()
@@ -70,7 +70,7 @@ struct QuestionRatingsChart: View {
           )
           .foregroundStyle(QuestionColors.borderColour)
         }
-        .frame(height: 200)
+        .frame(height: 180)
         .padding()
       }
     }
@@ -101,7 +101,7 @@ struct CommunicationStats: View {
   }
 
   var body: some View {
-    HStack(spacing: 15) {
+    HStack(spacing: 12) {
       StatCard(
         title: "Questions Rated",
         value: "\(stats.totalQuestions)",
@@ -171,8 +171,9 @@ struct GoalsProgressChart: View {
             .foregroundStyle(QuestionColors.borderColour.gradient)
           }
         }
-        .frame(height: 200)
-        .padding()
+        .frame(height: 150)
+        .padding(.horizontal)
+        .padding(.bottom, 8)
       }
     }
     .background(QuestionColors.cardColour)
@@ -191,13 +192,13 @@ struct StatCard: View {
   let icon: String
 
   var body: some View {
-    VStack {
+    VStack(spacing: 4) {
       Image(systemName: icon)
-        .font(.title2)
+        .font(.title3)
         .foregroundColor(QuestionColors.borderColour)
 
       Text(value)
-        .font(.title)
+        .font(.title2)
         .bold()
 
       Text(title)
@@ -205,7 +206,7 @@ struct StatCard: View {
         .foregroundColor(.gray)
     }
     .frame(maxWidth: .infinity)
-    .padding()
+    .padding(.vertical, 12)
     .background(QuestionColors.cardColour)
     .cornerRadius(30)
     .overlay(
