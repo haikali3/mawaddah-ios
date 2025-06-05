@@ -8,14 +8,7 @@ struct MoodData: Identifiable {
 }
 
 struct StatisticsTabView: View {
-  @State private var selectedTimeFrame: TimeFrame = .week
   @EnvironmentObject var personStore: PersonStore
-
-  enum TimeFrame: String, CaseIterable {
-    case week = "Week"
-    case month = "Month"
-    case year = "Year"
-  }
 
   var body: some View {
     ScrollView {
