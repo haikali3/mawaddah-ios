@@ -37,16 +37,12 @@ struct QuestionPickerButton: View {
       NavigationStack {
         // Tag filter view
         if !allTags.isEmpty {
-          HStack(spacing: 8) {
-            // Clear Filters button
+          HStack {
+            // Sticky Clear Filters button
             Button(action: { selectedTags.removeAll() }) {
               Image(systemName: "xmark.circle.fill")
-                .font(.system(size: 16))
-                .padding(.vertical, 6)
-                .padding(.horizontal, 12)
-                .background(QuestionColors.borderColour)
-                .foregroundColor(.white)
-                .cornerRadius(12)
+                .font(.system(size: 20))
+                .foregroundColor(QuestionColors.borderColour)
             }
 
             ScrollView(.horizontal, showsIndicators: false) {
@@ -68,7 +64,7 @@ struct QuestionPickerButton: View {
               .padding(.vertical, 8)
             }
           }
-          .padding(.horizontal)
+          .padding(.horizontal, 10)
         }
         List {
           ForEach(filteredQuestions) { question in
