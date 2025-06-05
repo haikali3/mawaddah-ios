@@ -65,7 +65,7 @@ struct QuestionPickerButton: View {
               .padding(.leading, 8)
             }
           }
-          .padding(.horizontal, 10)
+          .padding(.horizontal, 15)
         }
         List {
           ForEach(filteredQuestions) { question in
