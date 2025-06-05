@@ -41,11 +41,15 @@ struct QuestionPickerButton: View {
             HStack(spacing: 8) {
 
               // Clear Filters button
-              TagView(
-                tag: "Clear",
-                isSelected: false,
-                action: { selectedTags.removeAll() }
-              )
+              Button(action: { selectedTags.removeAll() }) {
+                Text("Clear")
+                  .font(.caption)
+                  .padding(.vertical, 6)
+                  .padding(.horizontal, 12)
+                  .background(QuestionColors.borderColour)
+                  .foregroundColor(.white)
+                  .cornerRadius(12)
+              }
 
               // Tag filters
               ForEach(allTags, id: \.self) { tag in
