@@ -49,7 +49,7 @@ struct QuestionRatingsChart: View {
     VStack(alignment: .leading) {
       Text("Question Ratings")
         .font(.headline)
-        .padding(.horizontal)
+        .padding()
 
       if ratingsData.isEmpty {
         Text("No ratings yet")
@@ -151,7 +151,7 @@ struct GoalsProgressChart: View {
     VStack(alignment: .leading) {
       Text("Ratings by Category")
         .font(.headline)
-        .padding(.horizontal)
+        .padding()
 
       if tagRatings.isEmpty {
         Text("No ratings yet")
