@@ -15,38 +15,26 @@ struct ContentView: View {
       QuestionsTabView(viewModel: questionDeckViewModel)
         .tabItem {
           Image(systemName: "questionmark.circle")
-          Text("Questions")
         }
         .tag(0)
 
       PersonsTabView()
         .tabItem {
           Image(systemName: "person.circle")
-          Text("Persons")
         }
         .tag(1)
 
       StatisticsTabView()
         .tabItem {
           Image(systemName: "chart.bar")
-          Text("Statistics")
         }
         .tag(2)
 
       AIAnalysisTabView()
         .tabItem {
           Image(systemName: "brain.head.profile")
-          Text("AI Analysis")
         }
         .tag(3)
-
-      // New Search tab for searching and filtering questions
-      SearchQuestionsView(viewModel: questionDeckViewModel, selectedTab: $selectedTab)
-        .tabItem {
-          Image(systemName: "magnifyingglass")
-          Text("Search")
-        }
-        .tag(4)
     }
   }
 }
