@@ -62,21 +62,24 @@ struct QuestionRatingsChart: View {
             x: .value("Question", data.day),
             y: .value("Rating", data.mood)
           )
-          .foregroundStyle(Color.purple.gradient)
+          .foregroundStyle(QuestionColors.borderColour.gradient)
 
           PointMark(
             x: .value("Question", data.day),
             y: .value("Rating", data.mood)
           )
-          .foregroundStyle(Color.purple)
+          .foregroundStyle(QuestionColors.borderColour)
         }
         .frame(height: 200)
         .padding()
       }
     }
-    .background(Color.white)
-    .cornerRadius(12)
-    .shadow(radius: 2)
+    .background(QuestionColors.cardColour)
+    .cornerRadius(30)
+    .overlay(
+      RoundedRectangle(cornerRadius: 30)
+        .stroke(QuestionColors.borderColour, lineWidth: 2)
+    )
     .padding(.horizontal)
   }
 }
@@ -172,9 +175,12 @@ struct GoalsProgressChart: View {
         .padding()
       }
     }
-    .background(Color.white)
-    .cornerRadius(12)
-    .shadow(radius: 2)
+    .background(QuestionColors.cardColour)
+    .cornerRadius(30)
+    .overlay(
+      RoundedRectangle(cornerRadius: 30)
+        .stroke(QuestionColors.borderColour, lineWidth: 2)
+    )
     .padding(.horizontal)
   }
 }
@@ -188,7 +194,7 @@ struct StatCard: View {
     VStack {
       Image(systemName: icon)
         .font(.title2)
-        .foregroundColor(.accentColor)
+        .foregroundColor(QuestionColors.borderColour)
 
       Text(value)
         .font(.title)
@@ -200,9 +206,12 @@ struct StatCard: View {
     }
     .frame(maxWidth: .infinity)
     .padding()
-    .background(Color.white)
-    .cornerRadius(12)
-    .shadow(radius: 2)
+    .background(QuestionColors.cardColour)
+    .cornerRadius(30)
+    .overlay(
+      RoundedRectangle(cornerRadius: 30)
+        .stroke(QuestionColors.borderColour, lineWidth: 2)
+    )
   }
 }
 
