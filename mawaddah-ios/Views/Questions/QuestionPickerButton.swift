@@ -39,15 +39,15 @@ struct QuestionPickerButton: View {
         if !allTags.isEmpty {
           ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: 8) {
-              Button(action: { selectedTags.removeAll() }) {
-                Text("Clear Filters")
-                  .font(.caption)
-                  .padding(.vertical, 6)
-                  .padding(.horizontal, 12)
-                  .background(QuestionColors.cardColour)
-                  .foregroundColor(.primary)
-                  .cornerRadius(12)
-              }
+
+              // Clear Filters button
+              TagView(
+                tag: "Clear",
+                isSelected: false,
+                action: { selectedTags.removeAll() }
+              )
+
+              // Tag filters
               ForEach(allTags, id: \.self) { tag in
                 TagView(
                   tag: tag,
@@ -114,7 +114,7 @@ struct TagView: View {
         .background(
           isSelected ? QuestionColors.borderColour : QuestionColors.cardColour
         )
-        .foregroundColor(isSelected ? .white : .primary)
+        .foregroundColor(isSelected ? .white : QuestionColors.borderColour)
         .cornerRadius(12)
         .overlay(
           RoundedRectangle(cornerRadius: 12)
