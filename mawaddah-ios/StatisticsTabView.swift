@@ -9,6 +9,23 @@ struct MoodData: Identifiable {
 
 struct StatisticsTabView: View {
   @EnvironmentObject var personStore: PersonStore
+  @State private var selectedPartnerIndex = 0
+
+  var body: some View {
+    ZStack(alignment: .bottom) {
+      StatisticsContent()
+      PartnerSelectorView(selectedIndex: $selectedPartnerIndex)
+    }
+    .onChange(of: selectedPartnerIndex) { oldValue, newIndex in
+      if newIndex < personStore.persons.count {
+        personStore.selectedPersonID = personStore.persons[newIndex].id
+      }
+    }
+  }
+}
+
+private struct StatisticsContent: View {
+  @EnvironmentObject var personStore: PersonStore
 
   var body: some View {
     ScrollView {
@@ -18,8 +35,39 @@ struct StatisticsTabView: View {
         GoalsProgressChart()
       }
       .padding(.vertical)
+      .padding(.bottom, 60)
     }
     .background(Color.appBackground)
+  }
+}
+
+private struct PartnerSelectorView: View {
+  @EnvironmentObject var personStore: PersonStore
+  @Binding var selectedIndex: Int
+
+  var body: some View {
+    VStack {
+      Picker("Select Partner", selection: $selectedIndex) {
+        ForEach(Array(personStore.persons.enumerated()), id: \.element.id) { index, person in
+          Text(person.name).tag(index)
+        }
+      }
+      .pickerStyle(.menu)
+      .padding()
+      .background(QuestionColors.cardColour)
+      .cornerRadius(15)
+      .overlay(
+        RoundedRectangle(cornerRadius: 15)
+          .stroke(QuestionColors.borderColour, lineWidth: 2)
+      )
+      .padding(.horizontal)
+      .padding(.bottom, 8)
+    }
+    .background(
+      Rectangle()
+        .fill(Color.appBackground)
+        .shadow(color: .black.opacity(0.1), radius: 5, x: 0, y: -5)
+    )
   }
 }
 
