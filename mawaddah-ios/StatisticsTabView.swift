@@ -41,33 +41,33 @@ private struct StatisticsContent: View {
   }
 }
 
+// Select partner
 private struct PartnerSelectorView: View {
   @EnvironmentObject var personStore: PersonStore
   @Binding var selectedIndex: Int
 
   var body: some View {
-    VStack {
-      Picker("Select Partner", selection: $selectedIndex) {
-        ForEach(Array(personStore.persons.enumerated()), id: \.element.id) { index, person in
-          Text(person.name).tag(index)
+    Button {
+      // No action needed as Picker handles selection
+    } label: {
+      ZStack {
+        RoundedRectangle(cornerRadius: 30)
+          .fill(QuestionColors.cardColour)
+          .overlay(
+            RoundedRectangle(cornerRadius: 30)
+              .stroke(QuestionColors.borderColour, lineWidth: 2)
+          )
+        Picker("Select Partner", selection: $selectedIndex) {
+          ForEach(Array(personStore.persons.enumerated()), id: \.element.id) { index, person in
+            Text(person.name).tag(index)
+          }
         }
+        .pickerStyle(.menu)
+        .tint(QuestionColors.borderColour)
       }
-      .pickerStyle(.menu)
-      .padding()
-      .background(QuestionColors.cardColour)
-      .cornerRadius(15)
-      .overlay(
-        RoundedRectangle(cornerRadius: 15)
-          .stroke(QuestionColors.borderColour, lineWidth: 2)
-      )
-      .padding(.horizontal)
-      .padding(.bottom, 8)
+      .frame(width: 300, height: 50)
     }
-    .background(
-      Rectangle()
-        .fill(Color.appBackground)
-        .shadow(color: .black.opacity(0.1), radius: 5, x: 0, y: -5)
-    )
+    .padding(.bottom, 30)
   }
 }
 
