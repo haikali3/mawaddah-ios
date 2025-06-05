@@ -62,6 +62,7 @@ struct QuestionPickerButton: View {
                 }
               }
               .padding(.vertical, 8)
+              .padding(.leading, 8)
             }
           }
           .padding(.horizontal, 10)
@@ -92,6 +93,7 @@ struct QuestionPickerButton: View {
         .toolbar {
           ToolbarItem(placement: .navigationBarTrailing) {
             Button("Done") { showQuestionPicker = false }
+              .foregroundColor(borderColour)
           }
         }
       }
