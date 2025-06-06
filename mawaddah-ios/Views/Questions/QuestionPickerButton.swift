@@ -31,7 +31,7 @@ struct QuestionPickerButton: View {
           .font(.headline)
           .foregroundColor(borderColour)
       }
-      .frame(width: 350, height: 50)
+      .frame(width: 300, height: 50)
     }
     .sheet(isPresented: $showQuestionPicker) {
       NavigationStack {
