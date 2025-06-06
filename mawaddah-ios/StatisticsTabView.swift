@@ -10,16 +10,51 @@ struct MoodData: Identifiable {
 struct StatisticsTabView: View {
   @EnvironmentObject var personStore: PersonStore
   @State private var selectedPartnerIndex = 0
+  @State private var showDeleteAlert = false
 
   var body: some View {
     ZStack(alignment: .bottom) {
       StatisticsContent()
-      PartnerSelectorView(selectedIndex: $selectedPartnerIndex)
+      HStack(spacing: 12) {
+        PartnerSelectorView(selectedIndex: $selectedPartnerIndex)
+          .frame(maxWidth: .infinity)
+
+        Button {
+          showDeleteAlert = true
+        } label: {
+          ZStack {
+            RoundedRectangle(cornerRadius: 30)
+              .fill(QuestionColors.cardColour)
+              .overlay(
+                RoundedRectangle(cornerRadius: 30)
+                  .stroke(QuestionColors.borderColour, lineWidth: 2)
+              )
+            Text("Delete All Data")
+              .font(.headline)
+              .foregroundColor(.red)
+          }
+          .frame(height: 50)
+        }
+      }
+      .padding(.horizontal)
+      .padding(.bottom, 30)
     }
     .onChange(of: selectedPartnerIndex) { oldValue, newIndex in
       if newIndex < personStore.persons.count {
         personStore.selectedPersonID = personStore.persons[newIndex].id
       }
+    }
+    .alert("Delete All Data", isPresented: $showDeleteAlert) {
+      Button("Cancel", role: .cancel) {}
+      Button("Delete", role: .destructive) {
+        if let selectedID = personStore.selectedPersonID {
+          personStore.ratings[selectedID] = [:]
+        }
+      }
+    } message: {
+      Text(
+        "Are you sure you want to delete all ratings data for the selected partner? This action cannot be undone."
+      )
     }
   }
 }
@@ -65,9 +100,8 @@ private struct PartnerSelectorView: View {
         .pickerStyle(.menu)
         .tint(QuestionColors.borderColour)
       }
-      .frame(width: 300, height: 50)
+      .frame(height: 50)
     }
-    .padding(.bottom, 30)
   }
 }
 
