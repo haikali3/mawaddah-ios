@@ -7,6 +7,8 @@ struct MoodData: Identifiable {
   let mood: Double
 }
 
+// TODO: Add a button to delete all data for a specific partner & QA features
+// TODO: Sync the partner selection across all tabs
 struct StatisticsTabView: View {
   @EnvironmentObject var personStore: PersonStore
   @State private var selectedPartnerIndex = 0
