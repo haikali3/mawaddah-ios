@@ -9,11 +9,10 @@ import SwiftUI
 
 struct ContentView: View {
   @State private var selectedTab = 2
-  @StateObject private var questionDeckViewModel = QuestionDeckViewModel()
-  @EnvironmentObject var personStore: PersonStore
+
   var body: some View {
     TabView(selection: $selectedTab) {
-      QuestionsTabView(viewModel: questionDeckViewModel)
+      QuestionsTabView()
         .tabItem {
           Image(systemName: "questionmark.circle")
           Text("Questions")
@@ -34,7 +33,7 @@ struct ContentView: View {
         }
         .tag(2)
 
-      AIAnalysisTabView(personStore: personStore, questions: questionDeckViewModel.questions)
+      AIAnalysisTabView()
         .tabItem {
           Image(systemName: "brain.head.profile")
           Text("AI Analysis")
@@ -47,5 +46,4 @@ struct ContentView: View {
 
 #Preview {
   ContentView()
-    .environmentObject(PersonStore())
 }

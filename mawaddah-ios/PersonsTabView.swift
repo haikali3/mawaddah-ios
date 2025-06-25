@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct PersonsTabView: View {
-  @EnvironmentObject var personStore: PersonStore
+  @State private var personStore = PersonStore.shared
   @State private var newPersonName: String = ""
 
   private let cardColour = QuestionColors.cardColour
@@ -19,7 +19,9 @@ struct PersonsTabView: View {
 
           ForEach(personStore.persons) { person in
             Button(action: {
-              personStore.selectPerson(person)
+              var store = personStore
+              store.selectPerson(person)
+              personStore = store
             }) {
               HStack {
                 Text(person.name)
@@ -31,7 +33,9 @@ struct PersonsTabView: View {
             }
           }
           .onDelete { offsets in
-            personStore.removePerson(at: offsets)
+            var store = personStore
+            store.removePerson(at: offsets)
+            personStore = store
           }
           .foregroundColor(borderColour)
           .listRowBackground(cardColour)
@@ -52,7 +56,9 @@ struct PersonsTabView: View {
           TextField("New person name", text: $newPersonName)
           Button(action: {
             guard !newPersonName.isEmpty else { return }
-            personStore.addPerson(name: newPersonName)
+            var store = personStore
+            store.addPerson(name: newPersonName)
+            personStore = store
             newPersonName = ""
           }) {
             Image(systemName: "plus.circle.fill")

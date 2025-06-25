@@ -10,7 +10,7 @@ struct CardView: View {
   var isPreviousDisabled: Bool = false
   var isNextDisabled: Bool = false
   var isRandomDisabled: Bool = false
-  @EnvironmentObject var personStore: PersonStore
+  @State private var personStore = PersonStore.shared
 
   // Use shared colors
   private let cardColour = QuestionColors.cardColour

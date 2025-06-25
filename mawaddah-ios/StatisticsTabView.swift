@@ -10,15 +10,15 @@ struct MoodData: Identifiable {
 // TODO: Add a button to delete all data for a specific partner & QA features
 // TODO: Sync the partner selection across all tabs
 struct StatisticsTabView: View {
-  @EnvironmentObject var personStore: PersonStore
+  @State private var personStore = PersonStore.shared
   @State private var selectedPartnerIndex = 0
   @State private var showDeleteAlert = false
 
   var body: some View {
     ZStack(alignment: .bottom) {
-      StatisticsContent()
+      StatisticsContent(personStore: personStore)
       HStack(spacing: 12) {
-        PartnerSelectorView(selectedIndex: $selectedPartnerIndex)
+        PartnerSelectorView(personStore: personStore, selectedIndex: $selectedPartnerIndex)
           .frame(maxWidth: .infinity)
 
         Button {
@@ -43,14 +43,20 @@ struct StatisticsTabView: View {
     }
     .onChange(of: selectedPartnerIndex) { oldValue, newIndex in
       if newIndex < personStore.persons.count {
-        personStore.selectedPersonID = personStore.persons[newIndex].id
+        var store = personStore
+        store.selectedPersonID = personStore.persons[newIndex].id
+        personStore = store
       }
     }
     .alert("Delete All Data", isPresented: $showDeleteAlert) {
       Button("Cancel", role: .cancel) {}
       Button("Delete", role: .destructive) {
         if let selectedID = personStore.selectedPersonID {
-          personStore.ratings[selectedID] = [:]
+          var store = personStore
+          var currentRatings = store.ratings
+          currentRatings[selectedID] = [:]
+          store.ratings = currentRatings
+          personStore = store
         }
       }
     } message: {
@@ -62,14 +68,14 @@ struct StatisticsTabView: View {
 }
 
 private struct StatisticsContent: View {
-  @EnvironmentObject var personStore: PersonStore
+  let personStore: PersonStore
 
   var body: some View {
     ScrollView {
       VStack(spacing: 15) {
-        QuestionRatingsChart()
-        CommunicationStats()
-        GoalsProgressChart()
+        QuestionRatingsChart(personStore: personStore)
+        CommunicationStats(personStore: personStore)
+        GoalsProgressChart(personStore: personStore)
       }
       .padding(.vertical)
       .padding(.bottom, 60)
@@ -80,7 +86,7 @@ private struct StatisticsContent: View {
 
 // Select partner
 private struct PartnerSelectorView: View {
-  @EnvironmentObject var personStore: PersonStore
+  let personStore: PersonStore
   @Binding var selectedIndex: Int
 
   var body: some View {
@@ -108,7 +114,7 @@ private struct PartnerSelectorView: View {
 }
 
 struct QuestionRatingsChart: View {
-  @EnvironmentObject var personStore: PersonStore
+  let personStore: PersonStore
 
   var ratingsData: [MoodData] {
     guard let selectedPersonID = personStore.selectedPersonID,
@@ -162,7 +168,7 @@ struct QuestionRatingsChart: View {
 }
 
 struct CommunicationStats: View {
-  @EnvironmentObject var personStore: PersonStore
+  let personStore: PersonStore
 
   var stats: (totalQuestions: Int, averageRating: Double) {
     guard let selectedPersonID = personStore.selectedPersonID,
@@ -196,7 +202,7 @@ struct CommunicationStats: View {
 }
 
 struct GoalsProgressChart: View {
-  @EnvironmentObject var personStore: PersonStore
+  let personStore: PersonStore
 
   var tagRatings: [(tag: String, average: Double)] {
     guard let selectedPersonID = personStore.selectedPersonID,
