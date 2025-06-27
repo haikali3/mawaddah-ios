@@ -8,17 +8,16 @@ struct MoodData: Identifiable {
 }
 
 // TODO: Add a button to delete all data for a specific partner & QA features
-// TODO: Sync the partner selection across all tabs
 struct StatisticsTabView: View {
-  @State private var personStore = PersonStore.shared
+  @StateObject private var partnerStore = PartnerStore.shared
   @State private var selectedPartnerIndex = 0
   @State private var showDeleteAlert = false
 
   var body: some View {
     ZStack(alignment: .bottom) {
-      StatisticsContent(personStore: personStore)
+      StatisticsContent(partnerStore: partnerStore)
       HStack(spacing: 12) {
-        PartnerSelectorView(personStore: personStore, selectedIndex: $selectedPartnerIndex)
+        PartnerSelectorView(partnerStore: partnerStore, selectedIndex: $selectedPartnerIndex)
           .frame(maxWidth: .infinity)
 
         Button {
@@ -41,23 +40,21 @@ struct StatisticsTabView: View {
       .padding(.horizontal)
       .padding(.bottom, 30)
     }
+    .onAppear {
+      updateSelectedIndex()
+    }
     .onChange(of: selectedPartnerIndex) { oldValue, newIndex in
-      if newIndex < personStore.persons.count {
-        var store = personStore
-        store.selectedPersonID = personStore.persons[newIndex].id
-        personStore = store
+      if newIndex < partnerStore.partners.count {
+        partnerStore.selectPartner(partnerStore.partners[newIndex])
       }
+    }
+    .onChange(of: partnerStore.selectedPartnerID) { oldValue, newValue in
+      updateSelectedIndex()
     }
     .alert("Delete All Data", isPresented: $showDeleteAlert) {
       Button("Cancel", role: .cancel) {}
       Button("Delete", role: .destructive) {
-        if let selectedID = personStore.selectedPersonID {
-          var store = personStore
-          var currentRatings = store.ratings
-          currentRatings[selectedID] = [:]
-          store.ratings = currentRatings
-          personStore = store
-        }
+        partnerStore.deleteAllRatingsForSelected()
       }
     } message: {
       Text(
@@ -65,17 +62,25 @@ struct StatisticsTabView: View {
       )
     }
   }
+
+  private func updateSelectedIndex() {
+    if let selectedID = partnerStore.selectedPartnerID,
+      let index = partnerStore.partners.firstIndex(where: { $0.id == selectedID })
+    {
+      selectedPartnerIndex = index
+    }
+  }
 }
 
 private struct StatisticsContent: View {
-  let personStore: PersonStore
+  @ObservedObject var partnerStore: PartnerStore
 
   var body: some View {
     ScrollView {
       VStack(spacing: 15) {
-        QuestionRatingsChart(personStore: personStore)
-        CommunicationStats(personStore: personStore)
-        GoalsProgressChart(personStore: personStore)
+        QuestionRatingsChart(partnerStore: partnerStore)
+        CommunicationStats(partnerStore: partnerStore)
+        GoalsProgressChart(partnerStore: partnerStore)
       }
       .padding(.vertical)
       .padding(.bottom, 60)
@@ -86,7 +91,7 @@ private struct StatisticsContent: View {
 
 // Select partner
 private struct PartnerSelectorView: View {
-  let personStore: PersonStore
+  @ObservedObject var partnerStore: PartnerStore
   @Binding var selectedIndex: Int
 
   var body: some View {
@@ -101,8 +106,8 @@ private struct PartnerSelectorView: View {
               .stroke(QuestionColors.borderColour, lineWidth: 2)
           )
         Picker("Select Partner", selection: $selectedIndex) {
-          ForEach(Array(personStore.persons.enumerated()), id: \.element.id) { index, person in
-            Text(person.name).tag(index)
+          ForEach(Array(partnerStore.partners.enumerated()), id: \.element.id) { (index, partner) in
+            Text(partner.name).tag(index)
           }
         }
         .pickerStyle(.menu)
@@ -114,16 +119,16 @@ private struct PartnerSelectorView: View {
 }
 
 struct QuestionRatingsChart: View {
-  let personStore: PersonStore
+  @ObservedObject var partnerStore: PartnerStore
 
   var ratingsData: [MoodData] {
-    guard let selectedPersonID = personStore.selectedPersonID,
-      let personRatings = personStore.ratings[selectedPersonID]
+    guard let selectedPartnerID = partnerStore.selectedPartnerID,
+      let partnerRatings = partnerStore.ratings[selectedPartnerID]
     else {
       return []
     }
 
-    return personRatings.sorted { $0.key < $1.key }.map { questionID, rating in
+    return partnerRatings.sorted { $0.key < $1.key }.map { questionID, rating in
       MoodData(day: "Q\(questionID)", mood: Double(rating))
     }
   }
@@ -168,17 +173,17 @@ struct QuestionRatingsChart: View {
 }
 
 struct CommunicationStats: View {
-  let personStore: PersonStore
+  @ObservedObject var partnerStore: PartnerStore
 
   var stats: (totalQuestions: Int, averageRating: Double) {
-    guard let selectedPersonID = personStore.selectedPersonID,
-      let personRatings = personStore.ratings[selectedPersonID]
+    guard let selectedPartnerID = partnerStore.selectedPartnerID,
+      let partnerRatings = partnerStore.ratings[selectedPartnerID]
     else {
       return (0, 0)
     }
 
-    let total = personRatings.count
-    let average = total > 0 ? Double(personRatings.values.reduce(0, +)) / Double(total) : 0
+    let total = partnerRatings.count
+    let average = total > 0 ? Double(partnerRatings.values.reduce(0, +)) / Double(total) : 0
 
     return (total, average)
   }
@@ -202,11 +207,11 @@ struct CommunicationStats: View {
 }
 
 struct GoalsProgressChart: View {
-  let personStore: PersonStore
+  @ObservedObject var partnerStore: PartnerStore
 
   var tagRatings: [(tag: String, average: Double)] {
-    guard let selectedPersonID = personStore.selectedPersonID,
-      let personRatings = personStore.ratings[selectedPersonID]
+    guard let selectedPartnerID = partnerStore.selectedPartnerID,
+      let partnerRatings = partnerStore.ratings[selectedPartnerID]
     else {
       return []
     }
@@ -218,7 +223,7 @@ struct GoalsProgressChart: View {
     var tagRatingsDict: [String: [Int]] = [:]
 
     // For each rated question, add its rating to its tags
-    for (questionID, rating) in personRatings {
+    for (questionID, rating) in partnerRatings {
       if let question = questions.first(where: { $0.id == questionID }) {
         for tag in question.tags {
           tagRatingsDict[tag, default: []].append(rating)

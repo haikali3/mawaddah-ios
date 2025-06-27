@@ -5,7 +5,7 @@ struct QuestionsTabView: View {
   @State private var currentIndex: Int = 0
   @State private var ratings: [Int: Int] = [:]
   @State private var showQuestionPicker = false
-  @State private var personStore = PersonStore.shared
+  @StateObject private var partnerStore = PartnerStore.shared
 
   var currentQuestion: Question? {
     guard currentIndex >= 0 && currentIndex < questions.count else { return nil }
@@ -19,14 +19,16 @@ struct QuestionsTabView: View {
         currentIndex: $currentIndex,
         ratings: $ratings,
         onRatingChanged: { questionID, rating in
-          var store = personStore
-          store.setRating(questionID: questionID, rating: rating)
+          partnerStore.setRating(questionID: questionID, rating: rating)
         }
       )
       .onAppear {
-        ratings = personStore.getRatingsForSelected()
+        loadRatings()
       }
-      
+      .onChange(of: partnerStore.selectedPartnerID) { oldValue, newValue in
+        loadRatings()
+      }
+
       QuestionPickerButton(
         questions: questions,
         currentIndex: $currentIndex,
@@ -35,5 +37,9 @@ struct QuestionsTabView: View {
       .padding(.bottom, 30)
     }
     .background(Color.appBackground.ignoresSafeArea())
+  }
+
+  private func loadRatings() {
+    ratings = partnerStore.getRatingsForSelected()
   }
 }

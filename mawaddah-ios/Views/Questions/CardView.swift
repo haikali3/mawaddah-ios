@@ -10,11 +10,34 @@ struct CardView: View {
   var isPreviousDisabled: Bool = false
   var isNextDisabled: Bool = false
   var isRandomDisabled: Bool = false
-  @State private var personStore = PersonStore.shared
+  private var partnerStore = PartnerStore.shared
 
   // Use shared colors
   private let cardColour = QuestionColors.cardColour
   private let borderColour = QuestionColors.borderColour
+
+  // Add explicit public initializer
+  init(
+    question: Question,
+    rating: Binding<Int>,
+    isInteractive: Bool,
+    onPrevious: (() -> Void)? = nil,
+    onNext: (() -> Void)? = nil,
+    onRandom: (() -> Void)? = nil,
+    isPreviousDisabled: Bool = false,
+    isNextDisabled: Bool = false,
+    isRandomDisabled: Bool = false
+  ) {
+    self.question = question
+    self._rating = rating
+    self.isInteractive = isInteractive
+    self.onPrevious = onPrevious
+    self.onNext = onNext
+    self.onRandom = onRandom
+    self.isPreviousDisabled = isPreviousDisabled
+    self.isNextDisabled = isNextDisabled
+    self.isRandomDisabled = isRandomDisabled
+  }
 
   var body: some View {
     RoundedRectangle(cornerRadius: 30)
@@ -70,9 +93,11 @@ struct CardView: View {
         }
         .padding(.top, 40)
       }
-      // Person selection header pinned to top
+      // Partner selection header pinned to top
       Group {
-        if let selected = personStore.persons.first(where: { $0.id == personStore.selectedPersonID }
+        if let selected = partnerStore.partners.first(where: {
+          $0.id == partnerStore.selectedPartnerID
+        }
         ) {
           Text("\(selected.name)")
             .font(.headline)

@@ -1,8 +1,8 @@
 import SwiftUI
 
-struct PersonsTabView: View {
-  @State private var personStore = PersonStore.shared
-  @State private var newPersonName: String = ""
+struct PartnersTabView: View {
+  @StateObject private var partnerStore = PartnerStore.shared
+  @State private var newPartnerName: String = ""
 
   private let cardColour = QuestionColors.cardColour
   private let borderColour = QuestionColors.borderColour
@@ -17,28 +17,25 @@ struct PersonsTabView: View {
             .foregroundColor(borderColour)
             .listRowBackground(cardColour)
 
-          ForEach(personStore.persons) { person in
+          ForEach(partnerStore.partners) { partner in
             Button(action: {
-              var store = personStore
-              store.selectPerson(person)
-              personStore = store
+              partnerStore.selectPartner(partner)
             }) {
               HStack {
-                Text(person.name)
-                if person.id == personStore.selectedPersonID {
+                Text(partner.name)
+                Spacer()
+                if partner.id == partnerStore.selectedPartnerID {
                   Image(systemName: "checkmark")
                     .foregroundColor(borderColour)
                 }
               }
             }
+            .foregroundColor(borderColour)
+            .listRowBackground(cardColour)
           }
           .onDelete { offsets in
-            var store = personStore
-            store.removePerson(at: offsets)
-            personStore = store
+            partnerStore.removePartner(at: offsets)
           }
-          .foregroundColor(borderColour)
-          .listRowBackground(cardColour)
         }
         .clipShape(RoundedRectangle(cornerRadius: 30))
         .overlay(
@@ -53,17 +50,15 @@ struct PersonsTabView: View {
         )
 
         HStack {
-          TextField("New person name", text: $newPersonName)
+          TextField("New partner name", text: $newPartnerName)
+            .textFieldStyle(RoundedBorderTextFieldStyle())
           Button(action: {
-            guard !newPersonName.isEmpty else { return }
-            var store = personStore
-            store.addPerson(name: newPersonName)
-            personStore = store
-            newPersonName = ""
+            guard !newPartnerName.isEmpty else { return }
+            partnerStore.addPartner(name: newPartnerName)
+            newPartnerName = ""
           }) {
             Image(systemName: "plus.circle.fill")
               .font(.system(size: 30))
-              .buttonStyle(.borderedProminent)
               .foregroundColor(borderColour)
           }
         }
@@ -81,4 +76,8 @@ struct PersonsTabView: View {
       .padding(30)
     }
   }
+}
+
+#Preview {
+  PartnersTabView()
 }

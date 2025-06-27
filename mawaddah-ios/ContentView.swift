@@ -19,7 +19,7 @@ struct ContentView: View {
         }
         .tag(0)
 
-      PersonsTabView()
+      PartnersTabView()
         .tabItem {
           Image(systemName: "person.circle")
           Text("Partners")
