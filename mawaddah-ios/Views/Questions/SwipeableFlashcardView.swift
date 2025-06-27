@@ -5,11 +5,10 @@ struct SwipeableFlashcardView: View {
   @Binding var currentIndex: Int
   @Binding var ratings: [Int: Int]
   let onRatingChanged: (Int, Int) -> Void
-  
+
   @State private var offset = CGSize.zero
   @State private var isAnimating = false
 
-  private let borderColour = QuestionColors.borderColour
   private let swipeThreshold: CGFloat = 100
 
   private var isDragging: Bool {
@@ -20,7 +19,7 @@ struct SwipeableFlashcardView: View {
     guard currentIndex >= 0 && currentIndex < questions.count else { return nil }
     return questions[currentIndex]
   }
-  
+
   private var nextQuestion: Question? {
     let next = currentIndex + 1
     return next < questions.count ? questions[next] : nil
@@ -103,7 +102,7 @@ struct SwipeableFlashcardView: View {
       } else {
         Text("No more questions!")
           .font(.title)
-          .foregroundColor(borderColour)
+          .foregroundColor(QuestionColors.borderColour)
       }
     }
   }
@@ -152,17 +151,17 @@ struct SwipeableFlashcardView: View {
       isAnimating = false
     }
   }
-  
+
   private func showNextCard() {
     guard currentIndex < questions.count - 1 else { return }
     currentIndex += 1
   }
-  
+
   private func showPreviousCard() {
     guard currentIndex > 0 else { return }
     currentIndex -= 1
   }
-  
+
   private func showRandomCard() {
     guard !questions.isEmpty else { return }
     var newIndex: Int
@@ -171,4 +170,13 @@ struct SwipeableFlashcardView: View {
     } while questions.count > 1 && newIndex == currentIndex
     currentIndex = newIndex
   }
+}
+
+#Preview {
+  SwipeableFlashcardView(
+    questions: QuestionRepository.loadAll(),
+    currentIndex: .constant(0),
+    ratings: .constant([1: 3, 2: 4]),
+    onRatingChanged: { _, _ in }
+  )
 }

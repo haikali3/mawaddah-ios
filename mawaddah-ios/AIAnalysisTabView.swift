@@ -88,3 +88,7 @@ struct AIAnalysisTabView: View {
     return summary
   }
 }
+
+#Preview {
+  AIAnalysisTabView()
+}

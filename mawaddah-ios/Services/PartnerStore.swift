@@ -1,4 +1,4 @@
-import Foundation
+// import Foundation
 import SwiftUI
 
 /// Represents a partner to be rated.

@@ -43,3 +43,7 @@ struct QuestionsTabView: View {
     ratings = partnerStore.getRatingsForSelected()
   }
 }
+
+#Preview {
+  QuestionsTabView()
+}

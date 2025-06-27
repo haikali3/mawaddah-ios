@@ -4,9 +4,6 @@ struct PartnersTabView: View {
   @StateObject private var partnerStore = PartnerStore.shared
   @State private var newPartnerName: String = ""
 
-  private let cardColour = QuestionColors.cardColour
-  private let borderColour = QuestionColors.borderColour
-
   var body: some View {
     ZStack {
       Color.appBackground.ignoresSafeArea()
@@ -14,8 +11,8 @@ struct PartnersTabView: View {
         List {
           Text("Partners")
             .font(.largeTitle)
-            .foregroundColor(borderColour)
-            .listRowBackground(cardColour)
+            .foregroundColor(QuestionColors.borderColour)
+            .listRowBackground(QuestionColors.cardColour)
 
           ForEach(partnerStore.partners) { partner in
             Button(action: {
@@ -26,12 +23,12 @@ struct PartnersTabView: View {
                 Spacer()
                 if partner.id == partnerStore.selectedPartnerID {
                   Image(systemName: "checkmark")
-                    .foregroundColor(borderColour)
+                    .foregroundColor(QuestionColors.borderColour)
                 }
               }
             }
-            .foregroundColor(borderColour)
-            .listRowBackground(cardColour)
+            .foregroundColor(QuestionColors.borderColour)
+            .listRowBackground(QuestionColors.cardColour)
           }
           .onDelete { offsets in
             partnerStore.removePartner(at: offsets)
@@ -40,13 +37,13 @@ struct PartnersTabView: View {
         .clipShape(RoundedRectangle(cornerRadius: 30))
         .overlay(
           RoundedRectangle(cornerRadius: 30)
-            .stroke(borderColour, lineWidth: 2)
+            .stroke(QuestionColors.borderColour, lineWidth: 2)
         )
         .listStyle(DefaultListStyle())
         .scrollContentBackground(.hidden)
         .background(
           RoundedRectangle(cornerRadius: 30)
-            .fill(cardColour)
+            .fill(QuestionColors.cardColour)
         )
 
         HStack {
@@ -58,7 +55,7 @@ struct PartnersTabView: View {
           }) {
             Image(systemName: "plus.circle.fill")
               .font(.system(size: 30))
-              .foregroundColor(borderColour)
+              .foregroundColor(QuestionColors.borderColour)
           }
         }
         .padding(EdgeInsets(top: 10, leading: 25, bottom: 10, trailing: 10))
@@ -68,7 +65,7 @@ struct PartnersTabView: View {
         )
         .overlay(
           RoundedRectangle(cornerRadius: 30)
-            .stroke(borderColour, lineWidth: 2)
+            .stroke(QuestionColors.borderColour, lineWidth: 2)
         )
         .padding(.top, 20)
       }
