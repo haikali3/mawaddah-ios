@@ -30,8 +30,8 @@ struct StatisticsTabView: View {
                 RoundedRectangle(cornerRadius: 30)
                   .stroke(QuestionColors.borderColour, lineWidth: 2)
               )
-            Text("Delete All Data")
-              .font(.headline)
+            Image(systemName: "trash")
+              .font(.title2)
               .foregroundColor(.red)
           }
           .frame(height: 50)
@@ -118,7 +118,7 @@ private struct PartnerSelectorView: View {
   }
 }
 
-struct QuestionRatingsChart: View {
+private struct QuestionRatingsChart: View {
   @ObservedObject var partnerStore: PartnerStore
 
   var ratingsData: [MoodData] {
@@ -172,7 +172,7 @@ struct QuestionRatingsChart: View {
   }
 }
 
-struct CommunicationStats: View {
+private struct CommunicationStats: View {
   @ObservedObject var partnerStore: PartnerStore
 
   var stats: (totalQuestions: Int, averageRating: Double) {
@@ -206,7 +206,7 @@ struct CommunicationStats: View {
   }
 }
 
-struct GoalsProgressChart: View {
+private struct GoalsProgressChart: View {
   @ObservedObject var partnerStore: PartnerStore
 
   var tagRatings: [(tag: String, average: Double)] {
@@ -274,7 +274,7 @@ struct GoalsProgressChart: View {
   }
 }
 
-struct StatCard: View {
+private struct StatCard: View {
   let title: String
   let value: String
   let icon: String
