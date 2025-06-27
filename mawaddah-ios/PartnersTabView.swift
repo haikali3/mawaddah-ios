@@ -51,7 +51,6 @@ struct PartnersTabView: View {
 
         HStack {
           TextField("New partner name", text: $newPartnerName)
-            .textFieldStyle(RoundedBorderTextFieldStyle())
           Button(action: {
             guard !newPartnerName.isEmpty else { return }
             partnerStore.addPartner(name: newPartnerName)
