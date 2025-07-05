@@ -1,30 +1,49 @@
 import SwiftUI
 
 struct QuestionsTabView: View {
-  @ObservedObject var viewModel: QuestionDeckViewModel
+  let questions: [Question] = QuestionRepository.loadAll()
+  @State private var currentIndex: Int = 0
+  @State private var ratings: [Int: Int] = [:]
   @State private var showQuestionPicker = false
-  @EnvironmentObject var personStore: PersonStore
+  @StateObject private var partnerStore = PartnerStore.shared
+
+  var currentQuestion: Question? {
+    guard currentIndex >= 0 && currentIndex < questions.count else { return nil }
+    return questions[currentIndex]
+  }
 
   var body: some View {
     VStack {
-      SwipeableFlashcardView(viewModel: viewModel)
-        .onAppear {
-          // Load saved ratings for selected person when view appears
-          viewModel.ratings = personStore.getRatingsForSelected()
+      SwipeableFlashcardView(
+        questions: questions,
+        currentIndex: $currentIndex,
+        ratings: $ratings,
+        onRatingChanged: { questionID, rating in
+          partnerStore.setRating(questionID: questionID, rating: rating)
         }
-        .onReceive(viewModel.$ratings) { newRatings in
-          // Persist ratings to the selected person
-          for (qid, rating) in newRatings {
-            personStore.setRating(questionID: qid, rating: rating)
-          }
-        }
-        .onChange(of: personStore.selectedPersonID) { oldValue, newValue in
-          // Reload ratings when switching persons
-          viewModel.ratings = personStore.getRatingsForSelected()
-        }
-      QuestionPickerButton(viewModel: viewModel, showQuestionPicker: $showQuestionPicker)
-        .padding(.bottom, 30)
+      )
+      .onAppear {
+        loadRatings()
+      }
+      .onChange(of: partnerStore.selectedPartnerID) { oldValue, newValue in
+        loadRatings()
+      }
+
+      QuestionPickerButton(
+        questions: questions,
+        currentIndex: $currentIndex,
+        showQuestionPicker: $showQuestionPicker
+      )
+      .padding(.bottom, 30)
     }
     .background(Color.appBackground.ignoresSafeArea())
   }
+
+  private func loadRatings() {
+    ratings = partnerStore.getRatingsForSelected()
+  }
+}
+
+#Preview {
+  QuestionsTabView()
 }

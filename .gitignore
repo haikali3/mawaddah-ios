@@ -60,3 +60,7 @@ Package.resolved
 *.app
 *.xcuserstate
 *.xcworkspace/xcuserdata/
+
+# Opencode
+.opencode/
+.opencode.json

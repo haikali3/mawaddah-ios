@@ -18,3 +18,7 @@ struct HeartRatingView: View {
         }
     }
 }
+
+#Preview {
+    HeartRatingView(rating: .constant(3))
+}

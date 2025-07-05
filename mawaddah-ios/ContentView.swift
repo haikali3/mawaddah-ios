@@ -9,17 +9,17 @@ import SwiftUI
 
 struct ContentView: View {
   @State private var selectedTab = 2
-  @StateObject private var questionDeckViewModel = QuestionDeckViewModel()
+
   var body: some View {
     TabView(selection: $selectedTab) {
-      QuestionsTabView(viewModel: questionDeckViewModel)
+      QuestionsTabView()
         .tabItem {
           Image(systemName: "questionmark.circle")
           Text("Questions")
         }
         .tag(0)
 
-      PersonsTabView()
+      PartnersTabView()
         .tabItem {
           Image(systemName: "person.circle")
           Text("Partners")
@@ -46,5 +46,4 @@ struct ContentView: View {
 
 #Preview {
   ContentView()
-    .environmentObject(PersonStore())
 }

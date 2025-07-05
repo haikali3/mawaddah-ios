@@ -1,11 +1,8 @@
 import SwiftUI
 
-struct PersonsTabView: View {
-  @EnvironmentObject var personStore: PersonStore
-  @State private var newPersonName: String = ""
-
-  private let cardColour = QuestionColors.cardColour
-  private let borderColour = QuestionColors.borderColour
+struct PartnersTabView: View {
+  @StateObject private var partnerStore = PartnerStore.shared
+  @State private var newPartnerName: String = ""
 
   var body: some View {
     ZStack {
@@ -14,51 +11,51 @@ struct PersonsTabView: View {
         List {
           Text("Partners")
             .font(.largeTitle)
-            .foregroundColor(borderColour)
-            .listRowBackground(cardColour)
+            .foregroundColor(QuestionColors.borderColour)
+            .listRowBackground(QuestionColors.cardColour)
 
-          ForEach(personStore.persons) { person in
+          ForEach(partnerStore.partners) { partner in
             Button(action: {
-              personStore.selectPerson(person)
+              partnerStore.selectPartner(partner)
             }) {
               HStack {
-                Text(person.name)
-                if person.id == personStore.selectedPersonID {
+                Text(partner.name)
+                Spacer()
+                if partner.id == partnerStore.selectedPartnerID {
                   Image(systemName: "checkmark")
-                    .foregroundColor(borderColour)
+                    .foregroundColor(QuestionColors.borderColour)
                 }
               }
             }
+            .foregroundColor(QuestionColors.borderColour)
+            .listRowBackground(QuestionColors.cardColour)
           }
           .onDelete { offsets in
-            personStore.removePerson(at: offsets)
+            partnerStore.removePartner(at: offsets)
           }
-          .foregroundColor(borderColour)
-          .listRowBackground(cardColour)
         }
         .clipShape(RoundedRectangle(cornerRadius: 30))
         .overlay(
           RoundedRectangle(cornerRadius: 30)
-            .stroke(borderColour, lineWidth: 2)
+            .stroke(QuestionColors.borderColour, lineWidth: 2)
         )
         .listStyle(DefaultListStyle())
         .scrollContentBackground(.hidden)
         .background(
           RoundedRectangle(cornerRadius: 30)
-            .fill(cardColour)
+            .fill(QuestionColors.cardColour)
         )
 
         HStack {
-          TextField("New person name", text: $newPersonName)
+          TextField("New partner name", text: $newPartnerName)
           Button(action: {
-            guard !newPersonName.isEmpty else { return }
-            personStore.addPerson(name: newPersonName)
-            newPersonName = ""
+            guard !newPartnerName.isEmpty else { return }
+            partnerStore.addPartner(name: newPartnerName)
+            newPartnerName = ""
           }) {
             Image(systemName: "plus.circle.fill")
               .font(.system(size: 30))
-              .buttonStyle(.borderedProminent)
-              .foregroundColor(borderColour)
+              .foregroundColor(QuestionColors.borderColour)
           }
         }
         .padding(EdgeInsets(top: 10, leading: 25, bottom: 10, trailing: 10))
@@ -68,11 +65,15 @@ struct PersonsTabView: View {
         )
         .overlay(
           RoundedRectangle(cornerRadius: 30)
-            .stroke(borderColour, lineWidth: 2)
+            .stroke(QuestionColors.borderColour, lineWidth: 2)
         )
         .padding(.top, 20)
       }
       .padding(30)
     }
   }
+}
+
+#Preview {
+  PartnersTabView()
 }

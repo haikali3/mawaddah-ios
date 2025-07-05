@@ -9,12 +9,9 @@ import SwiftUI
 
 @main
 struct MawaddahiOSApp: App {
-  @StateObject private var personStore = PersonStore()
-
   var body: some Scene {
     WindowGroup {
       ContentView()
-        .environmentObject(personStore)
     }
   }
 }

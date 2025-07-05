@@ -1,20 +1,23 @@
 import SwiftUI
 
 struct QuestionPickerButton: View {
-  @ObservedObject var viewModel: QuestionDeckViewModel
+  let questions: [Question]
+  @Binding var currentIndex: Int
   @Binding var showQuestionPicker: Bool
   @State private var searchText = ""
   @State private var selectedTags = Set<String>()
+
   private var filteredQuestions: [Question] {
-    viewModel.questions.filtered(by: searchText, tags: selectedTags)
+    questions.filtered(by: searchText, tags: selectedTags)
   }
   private var allTags: [String] {
-    viewModel.questions.uniqueTags()
+    questions.uniqueTags()
   }
 
-  // Use shared colors
-  private let cardColour = QuestionColors.cardColour
-  private let borderColour = QuestionColors.borderColour
+  private var currentQuestion: Question? {
+    guard currentIndex >= 0 && currentIndex < questions.count else { return nil }
+    return questions[currentIndex]
+  }
 
   var body: some View {
     Button {
@@ -22,14 +25,14 @@ struct QuestionPickerButton: View {
     } label: {
       ZStack {
         RoundedRectangle(cornerRadius: 30)
-          .fill(cardColour)
+          .fill(QuestionColors.cardColour)
           .overlay(
             RoundedRectangle(cornerRadius: 30)
-              .stroke(borderColour, lineWidth: 2)
+              .stroke(QuestionColors.borderColour, lineWidth: 2)
           )
-        Text("Question \(viewModel.index + 1) of \(viewModel.questions.count)")
+        Text("Question \(currentIndex + 1) of \(questions.count)")
           .font(.headline)
-          .foregroundColor(borderColour)
+          .foregroundColor(QuestionColors.borderColour)
       }
       .frame(width: 300, height: 50)
     }
@@ -70,19 +73,19 @@ struct QuestionPickerButton: View {
         List {
           ForEach(filteredQuestions) { question in
             Button {
-              if let newIndex = viewModel.questions.firstIndex(where: { $0.id == question.id }) {
-                viewModel.index = newIndex
+              if let newIndex = questions.firstIndex(where: { $0.id == question.id }) {
+                currentIndex = newIndex
               }
               showQuestionPicker = false
             } label: {
               HStack {
                 Text("\(question.id).")
-                  .foregroundColor(borderColour)
+                  .foregroundColor(QuestionColors.borderColour)
                 Text(question.text)
-                  .foregroundColor(borderColour)
-                if question.id == viewModel.currentQuestion?.id {
+                  .foregroundColor(QuestionColors.borderColour)
+                if question.id == currentQuestion?.id {
                   Image(systemName: "checkmark")
-                    .foregroundColor(borderColour)
+                    .foregroundColor(QuestionColors.borderColour)
                 }
               }
             }
@@ -93,7 +96,7 @@ struct QuestionPickerButton: View {
         .toolbar {
           ToolbarItem(placement: .navigationBarTrailing) {
             Button("Done") { showQuestionPicker = false }
-              .foregroundColor(borderColour)
+              .foregroundColor(QuestionColors.borderColour)
           }
         }
       }
@@ -124,4 +127,12 @@ struct TagView: View {
         )
     }
   }
+}
+
+#Preview {
+  QuestionPickerButton(
+    questions: QuestionRepository.loadAll(),
+    currentIndex: .constant(0),
+    showQuestionPicker: .constant(false)
+  )
 }

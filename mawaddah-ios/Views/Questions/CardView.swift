@@ -10,18 +10,37 @@ struct CardView: View {
   var isPreviousDisabled: Bool = false
   var isNextDisabled: Bool = false
   var isRandomDisabled: Bool = false
-  @EnvironmentObject var personStore: PersonStore
+  @StateObject private var partnerStore = PartnerStore.shared
 
-  // Use shared colors
-  private let cardColour = QuestionColors.cardColour
-  private let borderColour = QuestionColors.borderColour
+  // Add explicit public initializer
+  init(
+    question: Question,
+    rating: Binding<Int>,
+    isInteractive: Bool,
+    onPrevious: (() -> Void)? = nil,
+    onNext: (() -> Void)? = nil,
+    onRandom: (() -> Void)? = nil,
+    isPreviousDisabled: Bool = false,
+    isNextDisabled: Bool = false,
+    isRandomDisabled: Bool = false
+  ) {
+    self.question = question
+    self._rating = rating
+    self.isInteractive = isInteractive
+    self.onPrevious = onPrevious
+    self.onNext = onNext
+    self.onRandom = onRandom
+    self.isPreviousDisabled = isPreviousDisabled
+    self.isNextDisabled = isNextDisabled
+    self.isRandomDisabled = isRandomDisabled
+  }
 
   var body: some View {
     RoundedRectangle(cornerRadius: 30)
-      .fill(cardColour)
+      .fill(QuestionColors.cardColour)
       .overlay(
         RoundedRectangle(cornerRadius: 30)
-          .stroke(borderColour, lineWidth: 2)
+          .stroke(QuestionColors.borderColour, lineWidth: 2)
       )
       .overlay(content)
       .padding(30)
@@ -50,7 +69,7 @@ struct CardView: View {
                 .foregroundColor(.white)
                 .padding(.horizontal, 10)
                 .padding(.vertical, 5)
-                .background(borderColour)
+                .background(QuestionColors.borderColour)
                 .cornerRadius(12)
             }
           }
@@ -70,13 +89,15 @@ struct CardView: View {
         }
         .padding(.top, 40)
       }
-      // Person selection header pinned to top
+      // Partner selection header pinned to top
       Group {
-        if let selected = personStore.persons.first(where: { $0.id == personStore.selectedPersonID }
+        if let selected = partnerStore.partners.first(where: {
+          $0.id == partnerStore.selectedPartnerID
+        }
         ) {
           Text("\(selected.name)")
             .font(.headline)
-            .foregroundColor(borderColour)
+            .foregroundColor(QuestionColors.borderColour)
         } else {
           Text("No partner selected")
             .font(.headline)
@@ -91,7 +112,7 @@ struct CardView: View {
           Label("Previous", systemImage: "chevron.left")
             .labelStyle(IconOnlyLabelStyle())
             .font(.title2)
-            .foregroundColor(isPreviousDisabled ? .gray : borderColour)
+            .foregroundColor(isPreviousDisabled ? .gray : QuestionColors.borderColour)
             .padding(12)
             .background(Color.purple.opacity(0.15))
             .clipShape(Circle())
@@ -103,7 +124,7 @@ struct CardView: View {
           Label("Random", systemImage: "dice")
             .labelStyle(IconOnlyLabelStyle())
             .font(.title2)
-            .foregroundColor(isRandomDisabled ? .gray : borderColour)
+            .foregroundColor(isRandomDisabled ? .gray : QuestionColors.borderColour)
             .padding(12)
             .background(Color.purple.opacity(0.15))
             .clipShape(Circle())
@@ -115,7 +136,7 @@ struct CardView: View {
           Label("Next", systemImage: "chevron.right")
             .labelStyle(IconOnlyLabelStyle())
             .font(.title2)
-            .foregroundColor(isNextDisabled ? .gray : borderColour)
+            .foregroundColor(isNextDisabled ? .gray : QuestionColors.borderColour)
             .padding(12)
             .background(Color.purple.opacity(0.15))
             .clipShape(Circle())
@@ -127,4 +148,13 @@ struct CardView: View {
       .padding(.bottom, 20)
     }
   }
+}
+
+#Preview {
+  CardView(
+    question: Question(
+      id: 1, text: "What is your concept of marriage?", tags: ["Marriage", "Values"]),
+    rating: .constant(3),
+    isInteractive: true
+  )
 }
