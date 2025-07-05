@@ -39,6 +39,13 @@ struct ContentView: View {
           Text("AI Analysis")
         }
         .tag(3)
+
+      IslamicGuidanceTabView()
+        .tabItem {
+          Image(systemName: "moon.stars")
+          Text("Guidance")
+        }
+        .tag(4)
     }
     .tint(QuestionColors.borderColour)
   }
